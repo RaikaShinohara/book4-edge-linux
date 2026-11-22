@@ -1,0 +1,30 @@
+From c9ad5296f9447cbc0b6fed840cf9a77010fae298 Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 16:59:24 +0000
+Subject: [PATCH] drm/msm/dp: skip PUSH_IDLE if link training failed
+
+The Book4 Edge logged link training failures during tests with a
+USB-C video adapter. Apply Jesse Casco's guard for PUSH_IDLE to
+this kernel's bridge callbacks. Whether this addresses the Book4
+Edge reset remains to be tested.
+
+Link: https://lkml.rescloud.iu.edu/hypermail/linux/kernel/2608.1/00440.html
+---
+ drivers/gpu/drm/msm/dp/dp_display.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+index 38bdcc131..e2f7bd450 100644
+--- a/drivers/gpu/drm/msm/dp/dp_display.c
++++ b/drivers/gpu/drm/msm/dp/dp_display.c
+@@ -1418,6 +1418,10 @@ void msm_dp_bridge_atomic_disable(struct drm_bridge *drm_bridge,
+ 
+ 	msm_dp_display = container_of(dp, struct msm_dp_display_private, msm_dp_display);
+ 
++	/* Link training may have failed before the main link was enabled. */
++	if (!dp->power_on)
++		return;
++
+ 	msm_dp_ctrl_push_idle(msm_dp_display->ctrl);
+ }
+ 

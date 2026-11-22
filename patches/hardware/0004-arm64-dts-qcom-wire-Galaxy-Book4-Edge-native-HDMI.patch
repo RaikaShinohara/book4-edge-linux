@@ -1,0 +1,103 @@
+From 94d6421ae6480c6e2ec9b8aa2522440db44fd0c4 Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 16:59:23 +0000
+Subject: [PATCH] arm64: dts: qcom: wire Galaxy Book4 Edge native HDMI
+
+Describe the RTD2171 bridge and move HPD pinctrl to it. Connect the
+third QMP PHY with the board's reversed DisplayPort lane order and
+correct PHY supplies. Native HDMI produced an image on the NP750XQA.
+
+Source: https://github.com/anatase-org/patchwork/tree/5fcc40d7a4bfc7ac91fc080c384b71331e23def7
+---
+ ...100-samsung-galaxy-book4-edge-np750xqa.dts | 58 +++++++++++++++----
+ 1 file changed, 47 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+index 53a1dcfb7..62c04e614 100644
+--- a/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
++++ b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+@@ -171,15 +171,41 @@ vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
+ 		regulator-boot-on;
+ 	};
+ 
++	hdmi-bridge {
++		compatible = "realtek,rtd2171";
++
++		pinctrl-0 = <&hdmi_hpd_default>;
++		pinctrl-names = "default";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				hdmi_bridge_dp_in: endpoint {
++					remote-endpoint = <&usb_1_ss2_qmpphy_out_dp>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				hdmi_bridge_tmds_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+-		pinctrl-0 = <&hdmi_hpd_default>;
+-		pinctrl-names = "default";
+ 
+ 		port {
+ 			hdmi_con: endpoint {
+-				remote-endpoint = <&usb_1_ss2_qmpphy_out>;
++				remote-endpoint = <&hdmi_bridge_tmds_out>;
+ 			};
+ 		};
+ 	};
+@@ -1685,21 +1711,31 @@ &usb_1_ss1_qmpphy_out {
+ 	remote-endpoint = <&retimer_ss1_in>;
+ };
+ 
+-/* DP-HDMI bridge connected here? */
++/* Native HDMI through the RTD2171 DP-to-HDMI bridge */
+ &usb_1_ss2_qmpphy {
+-	vdda-phy-supply = <&vreg_l2j_1p2>;
+-	vdda-pll-supply = <&vreg_l2d_0p9>;
+-
+-	qcom,combo-initial-mode = "dp";
++	vdda-phy-supply = <&vreg_l2d_0p9>;
++	vdda-pll-supply = <&vreg_l2j_1p2>;
+ 
+ 	/delete-property/ mode-switch;
+ 	/delete-property/ orientation-switch;
+ 
+ 	status = "okay";
+-};
+ 
+-&usb_1_ss2_qmpphy_out {
+-	remote-endpoint = <&hdmi_con>;
++	ports {
++		port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/delete-node/ endpoint;
++
++			usb_1_ss2_qmpphy_out_dp: endpoint@0 {
++				reg = <0>;
++
++				data-lanes = <3 2 1 0>;
++				remote-endpoint = <&hdmi_bridge_dp_in>;
++			};
++		};
++	};
+ };
+ 
+ 

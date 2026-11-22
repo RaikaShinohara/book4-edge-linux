@@ -1,0 +1,60 @@
+From f0e80384f8846e00a140a8049754df0607b56150 Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 16:59:23 +0000
+Subject: [PATCH] arm64: dts: qcom: enable Galaxy Book4 Edge microSD
+
+Enable SDC2 with the board's GPIO71 card detect and switchable I/O
+supply. An SDR104 microSD card enumerated as mmcblk0 on the NP750XQA.
+
+Source: https://github.com/anatase-org/patchwork/tree/5fcc40d7a4bfc7ac91fc080c384b71331e23def7
+---
+ ...100-samsung-galaxy-book4-edge-np750xqa.dts | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+index 9002375ce..f73181410 100644
+--- a/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
++++ b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+@@ -20,6 +20,7 @@
+  * Copyright (c) 2025 Kirill A. Korinsky <kirill@korins.ky>
+  * Copyright (c) 2025 Valentin Manea <valentin.manea@mrs.ro>
+  * Copyright (c) 2025 Jens Glathe <jens.glathe@oldschoolsolutions.biz>
++ * Copyright (c) 2026 Antheas Kapenekakis <lkml@antheas.dev>
+  */
+ 
+ /dts-v1/;
+@@ -1145,6 +1146,20 @@ &remoteproc_cdsp {
+ 	status = "okay";
+ };
+ 
++&sdhc_2 {
++	cd-gpios = <&tlmm 71 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&sdc2_default &sdc2_card_det_n>;
++	pinctrl-1 = <&sdc2_sleep &sdc2_card_det_n>;
++	pinctrl-names = "default", "sleep";
++	vmmc-supply = <&vreg_l9b_2p9>;
++	vqmmc-supply = <&vreg_l6b_1p8>;
++	bus-width = <4>;
++	no-sdio;
++	no-mmc;
++
++	status = "okay";
++};
++
+ &swr0 {
+ 	status = "okay";
+ 
+@@ -1208,6 +1223,13 @@ &tlmm {
+ 	gpio-reserved-ranges = <34 2>, /* Unused */
+ 			       <44 4>; /* SPI (TPM) */
+ 
++	sdc2_card_det_n: sdc2-card-det-state {
++		pins = "gpio71";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++
+ 	edp_reg_en: edp-reg-en-state {
+ 		pins = "gpio70";
+ 		function = "gpio";
