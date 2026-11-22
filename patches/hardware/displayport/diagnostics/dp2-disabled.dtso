@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: BSD-3-Clause
+/dts-v1/;
+/plugin/;
+
+&{/soc@0/display-subsystem@ae00000/displayport-controller@ae98000} {
+	status = "disabled";
+};

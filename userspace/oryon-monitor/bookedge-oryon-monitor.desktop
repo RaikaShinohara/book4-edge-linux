@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Oryon Monitor
+GenericName=Monitor de rendimiento
+Comment=CPU Oryon, GPU Adreno y procesos en tiempo real
+Exec=/usr/local/bin/oryon-monitor
+Icon=/usr/local/share/pixmaps/oryon-monitor.png
+Terminal=false
+Categories=System;Monitor;Qt;
+StartupNotify=true
