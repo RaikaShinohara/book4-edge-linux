@@ -17,3 +17,17 @@ systemctl --user restart plasma-powerdevil.service
 ```
 
 Meta+B cycles profiles in Plasma. With the [updated EC driver](../../driver/samsung-galaxybook-ec/) installed, Fn+F11 uses the same Plasma action. The driver reports the Samsung performance-mode packet as `KEY_BATTERY`. It preserves the normal F11 key and leaves the EC fan policy alone.
+
+## Select the profile when plugging in the charger
+
+The optional Plasma user service uses UPower events to select Performance
+on AC and Power Saver on battery. A manual selection can stay active until
+the power source changes. The service expects the three profiles to be
+available in Plasma through the setup above and requires PyGObject.
+
+~~~sh
+install -Dm644 bookedge-power-source-profile ~/.local/bin/bookedge-power-source-profile
+install -Dm644 bookedge-power-source-profile.service \
+    ~/.config/systemd/user/bookedge-power-source-profile.service
+systemctl --user enable --now bookedge-power-source-profile.service
+~~~
