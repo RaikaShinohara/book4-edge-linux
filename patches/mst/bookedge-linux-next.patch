@@ -1,0 +1,5698 @@
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 88230c4..0414b56 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -523,3 +523,5 @@ x1p64100-microsoft-denali-el2-dtbs	:= x1p64100-microsoft-denali.dtb x1-el2.dtbo
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1p64100-microsoft-denali.dtb x1p64100-microsoft-denali-el2.dtb
+ x1p42100-microsoft-sp12in-el2-dtbs	:= x1p42100-microsoft-sp12in.dtb x1-el2.dtbo
+ dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-microsoft-sp12in.dtb x1p42100-microsoft-sp12in-el2.dtb
++
++dtb-$(CONFIG_ARCH_QCOM) += x1p42100-samsung-galaxy-book4-edge-np750xqa.dtb
+diff --git a/arch/arm64/boot/dts/qcom/hamoa.dtsi b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+index 48f47aa..22e25dd 100644
+--- a/arch/arm64/boot/dts/qcom/hamoa.dtsi
++++ b/arch/arm64/boot/dts/qcom/hamoa.dtsi
+@@ -5534,6 +5534,330 @@ videocc: clock-controller@aaf0000 {
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		cci0: cci@ac15000 {
++			compatible = "qcom,x1e80100-cci", "qcom,msm8996-cci";
++			reg = <0 0x0ac15000 0 0x1000>;
++
++			interrupts = <GIC_SPI 460 IRQ_TYPE_EDGE_RISING>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CCI_0_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "cci";
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			pinctrl-0 = <&cci0_default>;
++			pinctrl-1 = <&cci0_sleep>;
++			pinctrl-names = "default", "sleep";
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++
++			cci0_i2c0: i2c-bus@0 {
++				reg = <0>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			cci0_i2c1: i2c-bus@1 {
++				reg = <1>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		cci1: cci@ac16000 {
++			compatible = "qcom,x1e80100-cci", "qcom,msm8996-cci";
++			reg = <0 0x0ac16000 0 0x1000>;
++
++			interrupts = <GIC_SPI 271 IRQ_TYPE_EDGE_RISING>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CCI_1_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "cci";
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			pinctrl-0 = <&cci1_default>;
++			pinctrl-1 = <&cci1_sleep>;
++			pinctrl-names = "default", "sleep";
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++
++			cci1_i2c0: i2c-bus@0 {
++				reg = <0>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			cci1_i2c1: i2c-bus@1 {
++				reg = <1>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		camss: isp@acb6000 {
++			compatible = "qcom,x1e80100-camss";
++
++			reg = <0 0x0acb6000 0 0x1000>,
++			      <0 0x0acb7000 0 0x2000>,
++			      <0 0x0acb9000 0 0x2000>,
++			      <0 0x0acbb000 0 0x2000>,
++			      <0 0x0acc6000 0 0x1000>,
++			      <0 0x0acca000 0 0x1000>,
++			      <0 0x0acf6000 0 0x1000>,
++			      <0 0x0acf7000 0 0x1000>,
++			      <0 0x0acf8000 0 0x1000>,
++			      <0 0x0ac62000 0 0x4000>,
++			      <0 0x0ac71000 0 0x4000>,
++			      <0 0x0acc7000 0 0x2000>,
++			      <0 0x0accb000 0 0x2000>;
++			reg-names = "csid_wrapper",
++				    "csid0",
++				    "csid1",
++				    "csid2",
++				    "csid_lite0",
++				    "csid_lite1",
++				    "csitpg0",
++				    "csitpg1",
++				    "csitpg2",
++				    "vfe0",
++				    "vfe1",
++				    "vfe_lite0",
++				    "vfe_lite1";
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_NRT_CLK>,
++				 <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CORE_AHB_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CPAS_FAST_AHB_CLK>,
++				 <&camcc CAM_CC_CPAS_IFE_0_CLK>,
++				 <&camcc CAM_CC_CPAS_IFE_1_CLK>,
++				 <&camcc CAM_CC_CPAS_IFE_LITE_CLK>,
++				 <&camcc CAM_CC_CPHY_RX_CLK_SRC>,
++				 <&camcc CAM_CC_CSID_CLK>,
++				 <&camcc CAM_CC_CSID_CSIPHY_RX_CLK>,
++				 <&gcc GCC_CAMERA_HF_AXI_CLK>,
++				 <&gcc GCC_CAMERA_SF_AXI_CLK>,
++				 <&camcc CAM_CC_IFE_0_CLK>,
++				 <&camcc CAM_CC_IFE_0_FAST_AHB_CLK>,
++				 <&camcc CAM_CC_IFE_1_CLK>,
++				 <&camcc CAM_CC_IFE_1_FAST_AHB_CLK>,
++				 <&camcc CAM_CC_IFE_LITE_CLK>,
++				 <&camcc CAM_CC_IFE_LITE_AHB_CLK>,
++				 <&camcc CAM_CC_IFE_LITE_CPHY_RX_CLK>,
++				 <&camcc CAM_CC_IFE_LITE_CSID_CLK>;
++			clock-names = "camnoc_nrt_axi",
++				      "camnoc_rt_axi",
++				      "core_ahb",
++				      "cpas_ahb",
++				      "cpas_fast_ahb",
++				      "cpas_vfe0",
++				      "cpas_vfe1",
++				      "cpas_vfe_lite",
++				      "cphy_rx_clk_src",
++				      "csid",
++				      "csid_csiphy_rx",
++				      "gcc_axi_hf",
++				      "gcc_axi_sf",
++				      "vfe0",
++				      "vfe0_fast_ahb",
++				      "vfe1",
++				      "vfe1_fast_ahb",
++				      "vfe_lite",
++				      "vfe_lite_ahb",
++				      "vfe_lite_cphy_rx",
++				      "vfe_lite_csid";
++
++			interrupts = <GIC_SPI 464 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 466 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 431 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 359 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 465 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 467 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 469 IRQ_TYPE_EDGE_RISING>,
++				     <GIC_SPI 360 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "csid0",
++					  "csid1",
++					  "csid2",
++					  "csid_lite0",
++					  "csid_lite1",
++					  "vfe0",
++					  "vfe1",
++					  "vfe_lite0",
++					  "vfe_lite1";
++
++			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_CAMERA_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
++					<&mmss_noc MASTER_CAMNOC_HF QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&mmss_noc MASTER_CAMNOC_SF QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&mmss_noc MASTER_CAMNOC_ICP QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "ahb",
++					     "hf_mnoc",
++					     "sf_mnoc",
++					     "sf_icp_mnoc";
++
++			iommus = <&apps_smmu 0x800 0x60>,
++				 <&apps_smmu 0x860 0x60>,
++				 <&apps_smmu 0x1800 0x60>,
++				 <&apps_smmu 0x1860 0x60>,
++				 <&apps_smmu 0x18e0 0x00>,
++				 <&apps_smmu 0x1900 0x00>,
++				 <&apps_smmu 0x1980 0x20>,
++				 <&apps_smmu 0x19a0 0x20>;
++
++			phys = <&csiphy0>, <&csiphy1>,
++			       <&csiphy2>, <&csiphy4>;
++			phy-names = "csiphy0", "csiphy1",
++				    "csiphy2", "csiphy4";
++
++			power-domains = <&camcc CAM_CC_IFE_0_GDSC>,
++					<&camcc CAM_CC_IFE_1_GDSC>,
++					<&camcc CAM_CC_TITAN_TOP_GDSC>;
++			power-domain-names = "ife0",
++					     "ife1",
++					     "top";
++
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++				};
++
++				port@1 {
++					reg = <1>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++				};
++
++				port@2 {
++					reg = <2>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++				};
++
++				port@3 {
++					reg = <3>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++				};
++			};
++		};
++
++		csiphy0: csiphy@ace4000 {
++			compatible = "qcom,x1e80100-mipi-csi2-combo-phy";
++			reg = <0 0x0ace4000 0 0x2000>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CSIPHY0_CLK>,
++				 <&camcc CAM_CC_CSI0PHYTIMER_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "csiphy",
++				      "csiphy_timer";
++
++			interrupts = <GIC_SPI 477 IRQ_TYPE_EDGE_RISING>;
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			#phy-cells = <0>;
++
++			status = "disabled";
++		};
++
++		csiphy1: csiphy@ace6000 {
++			compatible = "qcom,x1e80100-mipi-csi2-combo-phy";
++			reg = <0 0x0ace6000 0 0x2000>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CSIPHY1_CLK>,
++				 <&camcc CAM_CC_CSI1PHYTIMER_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "csiphy",
++				      "csiphy_timer";
++
++			interrupts = <GIC_SPI 478 IRQ_TYPE_EDGE_RISING>;
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			#phy-cells = <0>;
++
++			status = "disabled";
++		};
++
++		csiphy2: csiphy@ace8000 {
++			compatible = "qcom,x1e80100-mipi-csi2-combo-phy";
++			reg = <0 0x0ace8000 0 0x2000>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CSIPHY2_CLK>,
++				 <&camcc CAM_CC_CSI2PHYTIMER_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "csiphy",
++				      "csiphy_timer";
++
++			interrupts = <GIC_SPI 479 IRQ_TYPE_EDGE_RISING>;
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			#phy-cells = <0>;
++
++			status = "disabled";
++		};
++
++		csiphy4: csiphy@acec000 {
++			compatible = "qcom,x1e80100-mipi-csi2-combo-phy";
++			reg = <0 0x0acec000 0 0x2000>;
++
++			clocks = <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++				 <&camcc CAM_CC_CPAS_AHB_CLK>,
++				 <&camcc CAM_CC_CSIPHY4_CLK>,
++				 <&camcc CAM_CC_CSI4PHYTIMER_CLK>;
++			clock-names = "camnoc_axi",
++				      "cpas_ahb",
++				      "csiphy",
++				      "csiphy_timer";
++
++			interrupts = <GIC_SPI 122 IRQ_TYPE_EDGE_RISING>;
++
++			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++			#phy-cells = <0>;
++
++			status = "disabled";
++		};
++
+ 		camcc: clock-controller@ade0000 {
+ 			compatible = "qcom,x1e80100-camcc";
+ 			reg = <0x0 0x0ade0000 0x0 0x20000>;
+@@ -6117,6 +6441,10 @@ spmi_bus1: spmi@c432000 {
+ 		};
+ 
+ 		tlmm: pinctrl@f100000 {
++
++
++
++
+ 			compatible = "qcom,x1e80100-tlmm";
+ 			reg = <0 0x0f100000 0 0xf00000>;
+ 
+@@ -9914,3 +10242,77 @@ camera0-critical {
+ 		};
+ 	};
+ };
++
++&tlmm {
++	cci0_default: cci0-default-state {
++		cci0_i2c0_default: cci0-i2c0-default-pins {
++			/* cci_i2c_sda0, cci_i2c_scl0 */
++			pins = "gpio101", "gpio102";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++
++		cci0_i2c1_default: cci0-i2c1-default-pins {
++			/* cci_i2c_sda1, cci_i2c_scl1 */
++			pins = "gpio103", "gpio104";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++
++	cci0_sleep: cci0-sleep-state {
++		cci0_i2c0_sleep: cci0-i2c0-sleep-pins {
++			/* cci_i2c_sda0, cci_i2c_scl0 */
++			pins = "gpio101", "gpio102";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++
++		cci0_i2c1_sleep: cci0-i2c1-sleep-pins {
++			/* cci_i2c_sda1, cci_i2c_scl1 */
++			pins = "gpio103", "gpio104";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++
++	cci1_default: cci1-default-state {
++		cci1_i2c0_default: cci1-i2c0-default-pins {
++			/* cci_i2c_sda2, cci_i2c_scl2 */
++			pins = "gpio105","gpio106";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++
++		cci1_i2c1_default: cci1-i2c1-default-pins {
++			/* aon_cci_i2c_sda3, aon_cci_i2c_scl3 */
++			pins = "gpio235","gpio236";
++			function = "aon_cci";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++
++	cci1_sleep: cci1-sleep-state {
++		cci1_i2c0_sleep: cci1-i2c0-sleep-pins {
++			/* cci_i2c_sda2, cci_i2c_scl2 */
++			pins = "gpio105","gpio106";
++			function = "cci_i2c";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++
++		cci1_i2c1_sleep: cci1-i2c1-sleep-pins {
++			/* aon_cci_i2c_sda3, aon_cci_i2c_scl3 */
++			pins = "gpio235","gpio236";
++			function = "aon_cci";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+new file mode 100644
+index 0000000..62c04e6
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/x1p42100-samsung-galaxy-book4-edge-np750xqa.dts
+@@ -0,0 +1,2445 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Samsung Galaxy Book4 Edge 15.6" (NP750XQA), Snapdragon X Plus X1P42100.
++ *
++ * Derived from the X1E80100 Galaxy Book4 Edge DTS. Board wiring follows this
++ * machine's own DSDT: keyboard i2c0/0x05/GPIO67, touchpad i2c13/0x40/GPIO3,
++ * EC event GPIO66, lid GPIO92, HDMI HPD GPIO126, WLAN enable GPIO117 + PCIe4
++ * PERST GPIO146, BT enable GPIO116, two Samsung Type-C controllers and UFS.
++ *
++ * Panel power and backlight rails use the X1P reference wiring (edp regulator
++ * on GPIO70, backlight rail pmc8380_3 gpio10, enable gpio4, PMK8550 PWM), taken
++ * from x1p42100-lenovo-thinkbook-16.dts and verified on this board.
++ *
++ * Camera: ov02c10 on CCI0/0x36 behind CSIPHY0 (values from the Qualcomm AeoB
++ * firmware profile of this machine). Audio: two WSA883x speakers on the WSA
++ * bus, WCD9385 headset codec, four DMICs at 2.4 MHz.
++ *
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2025 Kirill A. Korinsky <kirill@korins.ky>
++ * Copyright (c) 2025 Valentin Manea <valentin.manea@mrs.ro>
++ * Copyright (c) 2025 Jens Glathe <jens.glathe@oldschoolsolutions.biz>
++ * Copyright (c) 2026 Antheas Kapenekakis <lkml@antheas.dev>
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/clock/qcom,rpmh.h>
++#include <dt-bindings/clock/qcom,x1e80100-camcc.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/gpio-keys.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/phy/phy.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include <dt-bindings/thermal/thermal.h>
++
++#include "purwa.dtsi"
++#include "hamoa-pmics.dtsi"
++
++/ {
++	model = "Samsung Galaxy Book4 Edge 15.6 (NP750XQA)";
++	compatible = "samsung,galaxy-book4-edge-np750xqa", "qcom,x1p42100";
++	chassis-type = "laptop";
++
++	aliases {
++		serial0 = &uart21;
++		serial1 = &uart14;
++	};
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pmk8550_pwm 0 52083>;
++		enable-gpios = <&pmc8380_3_gpios 4 GPIO_ACTIVE_HIGH>;
++		power-supply = <&vreg_edp_bl>;
++
++		pinctrl-0 = <&edp_bl_en>, <&edp_bl_pwm>;
++		pinctrl-names = "default";
++	};
++
++	wcd938x: audio-codec {
++		compatible = "qcom,wcd9385-codec";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&wcd_default>;
++
++		qcom,micbias1-microvolt = <1800000>;
++		qcom,micbias2-microvolt = <1800000>;
++		qcom,micbias3-microvolt = <1800000>;
++		qcom,micbias4-microvolt = <1800000>;
++		qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
++		qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
++		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
++		qcom,rx-device = <&wcd_rx>;
++		qcom,tx-device = <&wcd_tx>;
++
++		reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
++
++		vdd-buck-supply = <&vreg_l15b_1p8>;
++		vdd-rxtx-supply = <&vreg_l15b_1p8>;
++		vdd-io-supply = <&vreg_l15b_1p8>;
++		vdd-mic-bias-supply = <&vreg_bob1>;
++
++		#sound-dai-cells = <1>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-0 = <&hall_int_n_default>;
++		pinctrl-names = "default";
++
++		switch-lid {
++			gpios = <&tlmm 92 GPIO_ACTIVE_LOW>;
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_LID>;
++			wakeup-source;
++			wakeup-event-action = <EV_ACT_DEASSERTED>;
++		};
++	};
++
++	vreg_rtmr0_1p15: regulator-rtmr0-1p15 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR0_1P15";
++		regulator-min-microvolt = <1150000>;
++		regulator-max-microvolt = <1150000>;
++		gpio = <&pmc8380_5_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr0_1p15_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	vreg_rtmr0_1p8: regulator-rtmr0-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR0_1P8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&pm8550ve_9_gpios 8 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr0_1p8_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	vreg_rtmr0_3p3: regulator-rtmr0-3p3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR0_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pm8550_gpios 11 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr0_3p3_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_1p15: regulator-rtmr1-1p15 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR1_1P15";
++		regulator-min-microvolt = <1150000>;
++		regulator-max-microvolt = <1150000>;
++		gpio = <&tlmm 188 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr1_1p15_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_1p8: regulator-rtmr1-1p8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR1_1P8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		gpio = <&tlmm 175 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr1_1p8_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	vreg_rtmr1_3p3: regulator-rtmr1-3p3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VREG_RTMR1_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&tlmm 186 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-0 = <&rtmr1_3p3_en>;
++		pinctrl-names = "default";
++		regulator-boot-on;
++	};
++
++	hdmi-bridge {
++		compatible = "realtek,rtd2171";
++
++		pinctrl-0 = <&hdmi_hpd_default>;
++		pinctrl-names = "default";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				hdmi_bridge_dp_in: endpoint {
++					remote-endpoint = <&usb_1_ss2_qmpphy_out_dp>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				hdmi_bridge_tmds_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
++				};
++			};
++		};
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&hdmi_bridge_tmds_out>;
++			};
++		};
++	};
++
++	reserved-memory {
++		linux,cma {
++			compatible = "shared-dma-pool";
++			size = <0x0 0x8000000>;
++			reusable;
++			linux,cma-default;
++		};
++	};
++
++	sound {
++		compatible = "qcom,x1e80100-sndcard";
++		model = "X1E80100-CRD";
++		audio-routing = "SpkrLeft IN", "WSA WSA_SPK1 OUT",
++				"SpkrRight IN", "WSA WSA_SPK2 OUT",
++				"IN1_HPHL", "HPHL_OUT",
++				"IN2_HPHR", "HPHR_OUT",
++				"AMIC2", "MIC BIAS2",
++				"VA DMIC0", "MIC BIAS3",
++				"VA DMIC1", "MIC BIAS3",
++				"VA DMIC2", "MIC BIAS1",
++				"VA DMIC3", "MIC BIAS1",
++				"VA DMIC0", "VA MIC BIAS3",
++				"VA DMIC1", "VA MIC BIAS3",
++				"VA DMIC2", "VA MIC BIAS1",
++				"VA DMIC3", "VA MIC BIAS1",
++				"TX SWR_INPUT1", "ADC2_OUTPUT";
++
++		wcd-playback-dai-link {
++			link-name = "WCD Playback";
++
++			cpu {
++				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
++			};
++
++			codec {
++				sound-dai = <&wcd938x 0>, <&swr1 0>, <&lpass_rxmacro 0>;
++			};
++
++			platform {
++				sound-dai = <&q6apm>;
++			};
++		};
++
++		wcd-capture-dai-link {
++			link-name = "WCD Capture";
++
++			cpu {
++				sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
++			};
++
++			codec {
++				sound-dai = <&wcd938x 1>, <&swr2 1>, <&lpass_txmacro 0>;
++			};
++
++			platform {
++				sound-dai = <&q6apm>;
++			};
++		};
++
++		wsa-dai-link {
++			link-name = "WSA Playback";
++
++			cpu {
++				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
++			};
++
++			codec {
++				sound-dai = <&left_spkr>, <&right_spkr>,
++					    <&swr0 0>, <&lpass_wsamacro 0>;
++			};
++
++			platform {
++				sound-dai = <&q6apm>;
++			};
++		};
++
++		va-dai-link {
++			link-name = "VA Capture";
++
++			cpu {
++				sound-dai = <&q6apmbedai VA_CODEC_DMA_TX_0>;
++			};
++
++			codec {
++				sound-dai = <&lpass_vamacro 0>;
++			};
++
++			platform {
++				sound-dai = <&q6apm>;
++			};
++		};
++	};
++
++	vreg_edp_3p3: regulator-edp-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_EDP_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 70 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&edp_reg_en>;
++		pinctrl-names = "default";
++
++		/* The regulator core disabling this as unused blanks the panel. */
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vreg_edp_bl: regulator-edp-bl {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VBL9";
++		regulator-min-microvolt = <3600000>;
++		regulator-max-microvolt = <3600000>;
++
++		gpio = <&pmc8380_3_gpios 10 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&edp_bl_reg_en>;
++
++		regulator-boot-on;
++	};
++
++
++	vreg_misc_3p3: regulator-misc-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_MISC_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pm8550ve_8_gpios 6 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&misc_3p3_reg_en>;
++
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vph_pwr: regulator-vph-pwr {
++		compatible = "regulator-fixed";
++
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vreg_wcn_3p3: regulator-wcn-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VREG_WCN_3P3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 214 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&wcn_sw_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	wcn7850-pmu {
++		compatible = "qcom,wcn7850-pmu";
++
++		wlan-enable-gpios = <&tlmm 117 GPIO_ACTIVE_HIGH>;
++		bt-enable-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
++
++		pinctrl-0 = <&wcn_wlan_bt_en>;
++		pinctrl-names = "default";
++
++		regulators {
++			vreg_pmu_rfa_cmn: ldo0 {
++				regulator-name = "vreg_pmu_rfa_cmn";
++			};
++
++			vreg_pmu_aon_0p59: ldo1 {
++				regulator-name = "vreg_pmu_aon_0p59";
++			};
++
++			vreg_pmu_wlcx_0p8: ldo2 {
++				regulator-name = "vreg_pmu_wlcx_0p8";
++			};
++
++			vreg_pmu_wlmx_0p85: ldo3 {
++				regulator-name = "vreg_pmu_wlmx_0p85";
++			};
++
++			vreg_pmu_btcmx_0p85: ldo4 {
++				regulator-name = "vreg_pmu_btcmx_0p85";
++			};
++
++			vreg_pmu_rfa_0p8: ldo5 {
++				regulator-name = "vreg_pmu_rfa_0p8";
++			};
++
++			vreg_pmu_rfa_1p2: ldo6 {
++				regulator-name = "vreg_pmu_rfa_1p2";
++			};
++
++			vreg_pmu_rfa_1p8: ldo7 {
++				regulator-name = "vreg_pmu_rfa_1p8";
++			};
++
++			vreg_pmu_pcie_0p9: ldo8 {
++				regulator-name = "vreg_pmu_pcie_0p9";
++			};
++
++			vreg_pmu_pcie_1p8: ldo9 {
++				regulator-name = "vreg_pmu_pcie_1p8";
++			};
++		};
++	};
++};
++
++&apps_rsc {
++	regulators-0 {
++		compatible = "qcom,pm8550-rpmh-regulators";
++		qcom,pmic-id = "b";
++
++		vdd-bob1-supply = <&vph_pwr>;
++		vdd-bob2-supply = <&vph_pwr>;
++		vdd-l1-l4-l10-supply = <&vreg_s4c_1p8>;
++		vdd-l2-l13-l14-supply = <&vreg_bob1>;
++		vdd-l5-l16-supply = <&vreg_bob1>;
++		vdd-l6-l7-supply = <&vreg_bob2>;
++		vdd-l8-l9-supply = <&vreg_bob1>;
++		vdd-l12-supply = <&vreg_s5j_1p2>;
++		vdd-l15-supply = <&vreg_s4c_1p8>;
++		vdd-l17-supply = <&vreg_bob2>;
++
++		vreg_bob1: bob1 {
++			regulator-name = "vreg_bob1";
++			regulator-min-microvolt = <3008000>;
++			regulator-max-microvolt = <3960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_bob2: bob2 {
++			regulator-name = "vreg_bob2";
++			regulator-min-microvolt = <2504000>;
++			regulator-max-microvolt = <3008000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l1b_1p8: ldo1 {
++			regulator-name = "vreg_l1b_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2b_3p0: ldo2 {
++			regulator-name = "vreg_l2b_3p0";
++			regulator-min-microvolt = <3072000>;
++			regulator-max-microvolt = <3100000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l4b_1p8: ldo4 {
++			regulator-name = "vreg_l4b_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l5b_3p0: ldo5 {
++			regulator-name = "vreg_l5b_3p0";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l6b_1p8: ldo6 {
++			regulator-name = "vreg_l6b_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7b_2p8: ldo7 {
++			regulator-name = "vreg_l7b_2p8";
++			/* camera AVDD/DOVDD: cycling them makes the sensor drop off I2C */
++			regulator-always-on;
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l8b_3p0: ldo8 {
++			regulator-name = "vreg_l8b_3p0";
++			regulator-min-microvolt = <3072000>;
++			regulator-max-microvolt = <3072000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l9b_2p9: ldo9 {
++			regulator-name = "vreg_l9b_2p9";
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l10b_1p8: ldo10 {
++			regulator-name = "vreg_l10b_1p8";
++			/* camera AVDD/DOVDD: cycling them makes the sensor drop off I2C */
++			regulator-always-on;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l12b_1p2: ldo12 {
++			regulator-name = "vreg_l12b_1p2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++		};
++
++		vreg_l13b_3p0: ldo13 {
++			regulator-name = "vreg_l13b_3p0";
++			regulator-min-microvolt = <3072000>;
++			regulator-max-microvolt = <3100000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l14b_3p0: ldo14 {
++			regulator-name = "vreg_l14b_3p0";
++			regulator-min-microvolt = <3072000>;
++			regulator-max-microvolt = <3072000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l15b_1p8: ldo15 {
++			regulator-name = "vreg_l15b_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++		};
++
++		vreg_l16b_2p9: ldo16 {
++			regulator-name = "vreg_l16b_2p9";
++			regulator-min-microvolt = <2912000>;
++			regulator-max-microvolt = <2912000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l17b_2p5: ldo17 {
++			regulator-name = "vreg_l17b_2p5";
++			regulator-min-microvolt = <2504000>;
++			regulator-max-microvolt = <2504000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-1 {
++		compatible = "qcom,pm8550ve-rpmh-regulators";
++		qcom,pmic-id = "c";
++
++		vdd-l1-supply = <&vreg_s5j_1p2>;
++		vdd-l2-supply = <&vreg_s1f_0p7>;
++		vdd-l3-supply = <&vreg_s1f_0p7>;
++		vdd-s4-supply = <&vph_pwr>;
++
++		vreg_s4c_1p8: smps4 {
++			regulator-name = "vreg_s4c_1p8";
++			regulator-min-microvolt = <1856000>;
++			regulator-max-microvolt = <2000000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l1c_1p2: ldo1 {
++			regulator-name = "vreg_l1c_1p2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2c_0p8: ldo2 {
++			regulator-name = "vreg_l2c_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3c_0p8: ldo3 {
++			regulator-name = "vreg_l3c_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-2 {
++		compatible = "qcom,pmc8380-rpmh-regulators";
++		qcom,pmic-id = "d";
++
++		vdd-l1-supply = <&vreg_s1f_0p7>;
++		vdd-l2-supply = <&vreg_s1f_0p7>;
++		vdd-l3-supply = <&vreg_s4c_1p8>;
++		vdd-s1-supply = <&vph_pwr>;
++
++		vreg_l1d_0p8: ldo1 {
++			regulator-name = "vreg_l1d_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2d_0p9: ldo2 {
++			regulator-name = "vreg_l2d_0p9";
++			regulator-min-microvolt = <912000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3d_1p8: ldo3 {
++			regulator-name = "vreg_l3d_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-3 {
++		compatible = "qcom,pmc8380-rpmh-regulators";
++		qcom,pmic-id = "e";
++
++		vdd-l2-supply = <&vreg_s1f_0p7>;
++		vdd-l3-supply = <&vreg_s5j_1p2>;
++
++		vreg_l2e_0p8: ldo2 {
++			regulator-name = "vreg_l2e_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3e_1p2: ldo3 {
++			regulator-name = "vreg_l3e_1p2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-4 {
++		compatible = "qcom,pmc8380-rpmh-regulators";
++		qcom,pmic-id = "f";
++
++		vdd-l1-supply = <&vreg_s5j_1p2>;
++		vdd-l2-supply = <&vreg_s5j_1p2>;
++		vdd-l3-supply = <&vreg_s5j_1p2>;
++		vdd-s1-supply = <&vph_pwr>;
++
++		vreg_s1f_0p7: smps1 {
++			regulator-name = "vreg_s1f_0p7";
++			regulator-min-microvolt = <700000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l1f_1p0: ldo1 {
++			regulator-name = "vreg_l1f_1p0";
++			regulator-min-microvolt = <1024000>;
++			regulator-max-microvolt = <1024000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2f_1p0: ldo2 {
++			regulator-name = "vreg_l2f_1p0";
++			regulator-min-microvolt = <1024000>;
++			regulator-max-microvolt = <1024000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3f_1p0: ldo3 {
++			regulator-name = "vreg_l3f_1p0";
++			regulator-min-microvolt = <1024000>;
++			regulator-max-microvolt = <1024000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-6 {
++		compatible = "qcom,pm8550ve-rpmh-regulators";
++		qcom,pmic-id = "i";
++
++		vdd-l1-supply = <&vreg_s4c_1p8>;
++		vdd-l2-supply = <&vreg_s5j_1p2>;
++		vdd-l3-supply = <&vreg_s1f_0p7>;
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++
++		vreg_s1i_0p9: smps1 {
++			regulator-name = "vreg_s1i_0p9";
++			regulator-min-microvolt = <900000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s2i_1p0: smps2 {
++			regulator-name = "vreg_s2i_1p0";
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l1i_1p8: ldo1 {
++			regulator-name = "vreg_l1i_1p8";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2i_1p2: ldo2 {
++			regulator-name = "vreg_l2i_1p2";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3i_0p8: ldo3 {
++			regulator-name = "vreg_l3i_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	regulators-7 {
++		compatible = "qcom,pm8550ve-rpmh-regulators";
++		qcom,pmic-id = "j";
++
++		vdd-l1-supply = <&vreg_s1f_0p7>;
++		vdd-l2-supply = <&vreg_s5j_1p2>;
++		vdd-l3-supply = <&vreg_s1f_0p7>;
++		vdd-s5-supply = <&vph_pwr>;
++
++		vreg_s5j_1p2: smps5 {
++			regulator-name = "vreg_s5j_1p2";
++			regulator-min-microvolt = <1256000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l1j_0p8: ldo1 {
++			regulator-name = "vreg_l1j_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l2j_1p2: ldo2 {
++			regulator-name = "vreg_l2j_1p2";
++			regulator-min-microvolt = <1256000>;
++			regulator-max-microvolt = <1256000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l3j_0p8: ldo3 {
++			regulator-name = "vreg_l3j_0p8";
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <920000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++};
++
++&gpu {
++       status = "okay";
++
++       zap-shader {
++               firmware-name = "qcom/x1p42100/SAMSUNG/NP750XQA/qcdxkmsucpurwa.mbn";
++       };
++};
++
++&i2c0 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	keyboard@5 {
++		compatible = "hid-over-i2c";
++		reg = <0x5>;
++
++		hid-descr-addr = <0x20>;
++		interrupts-extended = <&tlmm 67 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&kybd_default>;
++		pinctrl-names = "default";
++
++		wakeup-source;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	eusb0_repeater: redriver@4f {
++		compatible = "nxp,ptn3222";
++		reg = <0x4f>;
++		#phy-cells = <0>;
++
++		vdd3v3-supply = <&vreg_l2b_3p0>;
++		vdd1v8-supply = <&vreg_l3d_1p8>;
++
++		reset-gpios = <&tlmm 10 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&eusb0_reset_n>;
++		pinctrl-names = "default";
++	};
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	typec-mux@8 {
++		compatible = "parade,ps8830";
++		reg = <0x08>;
++
++		clocks = <&rpmhcc RPMH_RF_CLK3>;
++
++		vdd-supply = <&vreg_rtmr0_1p15>;
++		vdd33-supply = <&vreg_rtmr0_3p3>;
++		vdd33-cap-supply = <&vreg_rtmr0_3p3>;
++		vddar-supply = <&vreg_rtmr0_1p15>;
++		vddat-supply = <&vreg_rtmr0_1p15>;
++		vddio-supply = <&vreg_rtmr0_1p8>;
++
++		reset-gpios = <&pm8550_gpios 10 GPIO_ACTIVE_LOW>;
++		pinctrl-0 = <&rtmr0_reset_n>;
++		pinctrl-names = "default";
++
++		orientation-switch;
++		retimer-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				retimer_ss0_out: endpoint {
++					remote-endpoint = <&emuec_ss0_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				retimer_ss0_in: endpoint {
++					remote-endpoint = <&usb_1_ss0_qmpphy_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				retimer_ss0_sbu: endpoint {
++					remote-endpoint = <&emuec_ss0_sbu>;
++				};
++			};
++		};
++	};
++};
++
++&i2c4 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	eusb1_repeater: redriver@4f {
++		compatible = "nxp,ptn3222";
++		reg = <0x4f>;
++		#phy-cells = <0>;
++
++		vdd3v3-supply = <&vreg_l14b_3p0>;
++		vdd1v8-supply = <&vreg_l3d_1p8>;
++
++		reset-gpios = <&tlmm 19 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&eusb1_reset_n>;
++		pinctrl-names = "default";
++	};
++};
++
++&i2c7 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	typec-mux@8 {
++		compatible = "parade,ps8830";
++		reg = <0x08>;
++
++		clocks = <&rpmhcc RPMH_RF_CLK4>;
++
++		vdd-supply = <&vreg_rtmr1_1p15>;
++		vdd33-supply = <&vreg_rtmr1_3p3>;
++		vdd33-cap-supply = <&vreg_rtmr1_3p3>;
++		vddar-supply = <&vreg_rtmr1_1p15>;
++		vddat-supply = <&vreg_rtmr1_1p15>;
++		vddio-supply = <&vreg_rtmr1_1p8>;
++
++		reset-gpios = <&tlmm 176 GPIO_ACTIVE_LOW>;
++		pinctrl-0 = <&rtmr1_reset_n>;
++		pinctrl-names = "default";
++
++		orientation-switch;
++		retimer-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				retimer_ss1_out: endpoint {
++					remote-endpoint = <&emuec_ss1_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				retimer_ss1_in: endpoint {
++					remote-endpoint = <&usb_1_ss1_qmpphy_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++				retimer_ss1_sbu: endpoint {
++					remote-endpoint = <&emuec_ss1_sbu>;
++				};
++			};
++		};
++	};
++};
++
++&i2c18 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	eusb5_repeater: redriver@43 {
++		compatible = "nxp,ptn3222";
++		reg = <0x43>;
++		#phy-cells = <0>;
++
++		vdd3v3-supply = <&vreg_l13b_3p0>;
++		vdd1v8-supply = <&vreg_l4b_1p8>;
++
++		reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&eusb5_reset_n>;
++		pinctrl-names = "default";
++	};
++
++	eusb6_repeater: redriver@4f {
++		compatible = "nxp,ptn3222";
++		reg = <0x4f>;
++		#phy-cells = <0>;
++
++		vdd3v3-supply = <&vreg_l13b_3p0>;
++		vdd1v8-supply = <&vreg_l4b_1p8>;
++
++		reset-gpios = <&tlmm 7 GPIO_ACTIVE_LOW>;
++
++		pinctrl-0 = <&eusb6_reset_n>;
++		pinctrl-names = "default";
++	};
++};
++
++
++
++&i2c13 {
++	clock-frequency = <400000>;
++
++	status = "okay";
++
++	/*
++	 * Samsung fits one of four touchpads. The firmware says which, with its descriptor
++	 * register, and the board code (drivers/platform/arm64/samsung-galaxybook4-edge.c)
++	 * turns that node on with the firmware's value. Zinitix's value below is this board's;
++	 * the other three are placeholders the firmware's value replaces.
++	 */
++	/* ELAN0B00 */
++	touchpad@15 {
++		compatible = "hid-over-i2c";
++		reg = <0x15>;
++
++		hid-descr-addr = <0x1>;
++		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&tpad_default>;
++		pinctrl-names = "default";
++
++		status = "fail-needs-probe";
++	};
++
++	/* SYN2602 */
++	touchpad@20 {
++		compatible = "hid-over-i2c";
++		reg = <0x20>;
++
++		hid-descr-addr = <0x20>;
++		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&tpad_default>;
++		pinctrl-names = "default";
++
++		status = "fail-needs-probe";
++	};
++
++	/* ZNT0001 (Zinitix) */
++	touchpad@40 {
++		compatible = "hid-over-i2c";
++		reg = <0x40>;
++
++		hid-descr-addr = <0xe>;
++		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&tpad_default>;
++		pinctrl-names = "default";
++
++		status = "fail-needs-probe";
++	};
++
++	/* IMG4100 */
++	touchpad@50 {
++		compatible = "hid-over-i2c";
++		reg = <0x50>;
++
++		hid-descr-addr = <0x1>;
++		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-0 = <&tpad_default>;
++		pinctrl-names = "default";
++
++		status = "fail-needs-probe";
++	};
++};
++
++&lpass_tlmm {
++	spkr_01_sd_n_active: spkr-01-sd-n-active-state {
++		pins = "gpio12";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++		output-low;
++	};
++
++	spkr_23_sd_n_active: spkr-23-sd-n-active-state {
++		pins = "gpio13";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++		output-low;
++	};
++};
++
++&lpass_vamacro {
++	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
++	pinctrl-names = "default";
++
++	vdd-micb-supply = <&vreg_l1b_1p8>;
++	/* 4.8 MHz leaves a ~17 kHz idle tone in the capture; 2.4 MHz does not */
++	qcom,dmic-sample-rate = <2400000>;
++};
++
++&mdss {
++	status = "okay";
++};
++
++&mdss_dp0 {
++	status = "okay";
++};
++
++&mdss_dp0_out {
++	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
++};
++
++&mdss_dp1 {
++	status = "okay";
++};
++
++&mdss_dp1_out {
++	data-lanes = <0 1>;
++	link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000 8100000000>;
++};
++
++&mdss_dp2 {
++	status = "okay";
++};
++
++&mdss_dp2_out {
++	data-lanes = <0 1 2 3>;
++};
++
++&mdss_dp3 {
++	/delete-property/ #sound-dai-cells;
++
++	pinctrl-0 = <&edp0_hpd_default>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	aux-bus {
++		panel {
++			compatible = "edp-panel";
++			power-supply = <&vreg_edp_3p3>;
++			backlight = <&backlight>;
++
++			port {
++				edp_panel_in: endpoint {
++					remote-endpoint = <&mdss_dp3_out>;
++				};
++			};
++		};
++	};
++
++	ports {
++		port@1 {
++			reg = <1>;
++			mdss_dp3_out: endpoint {
++				data-lanes = <0 1 2 3>;
++				link-frequencies = /bits/ 64 <1620000000 2700000000 5400000000>;
++
++				remote-endpoint = <&edp_panel_in>;
++			};
++		};
++	};
++};
++
++
++&mdss_dp3_phy {
++	vdda-phy-supply = <&vreg_l3j_0p8>;
++	vdda-pll-supply = <&vreg_l2j_1p2>;
++
++	status = "okay";
++};
++
++&pcie4 {
++	perst-gpios = <&tlmm 146 GPIO_ACTIVE_LOW>;
++	wake-gpios = <&tlmm 148 GPIO_ACTIVE_LOW>;
++
++	pinctrl-0 = <&pcie4_default>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
++
++&pcie4_phy {
++	vdda-phy-supply = <&vreg_l3i_0p8>;
++	vdda-pll-supply = <&vreg_l3e_1p2>;
++
++	status = "okay";
++};
++
++&pcie4_port0 {
++	wifi@0 {
++		compatible = "pci17cb,1107";
++		reg = <0x10000 0x0 0x0 0x0 0x0>;
++
++		vddaon-supply = <&vreg_pmu_aon_0p59>;
++		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
++		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
++		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
++		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
++		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
++		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
++		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
++		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
++	};
++};
++
++&pm8550ve_8_gpios {
++	misc_3p3_reg_en: misc-3p3-reg-en-state {
++		pins = "gpio6";
++		function = "normal";
++		bias-disable;
++		input-disable;
++		output-enable;
++		drive-push-pull;
++		power-source = <1>; /* 1.8 V */
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++};
++
++&pm8550_gpios {
++	rtmr0_reset_n: rtmr0-reset-n-state {
++		pins = "gpio10";
++		function = "normal";
++		power-source = <1>;
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++
++	rtmr0_3p3_en: rtmr0-3p3-en-state {
++		pins = "gpio11";
++		function = "normal";
++		power-source = <1>;
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
++&pm8550ve_9_gpios {
++	rtmr0_1p8_en: rtmr0-1p8-en-state {
++		pins = "gpio8";
++		function = "normal";
++		power-source = <1>;
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
++&pmc8380_5_gpios {
++	rtmr0_1p15_en: rtmr0-1p15-en-state {
++		pins = "gpio8";
++		function = "normal";
++		power-source = <1>;
++		bias-disable;
++		input-disable;
++		output-enable;
++	};
++};
++
++&pmk8550_gpios {
++	edp_bl_pwm: edp-bl-pwm-state {
++		pins = "gpio5";
++		function = "func3";
++	};
++};
++
++&pmk8550_pwm {
++	status = "okay";
++};
++
++&pmc8380_3_gpios {
++	edp_bl_reg_en: edp-bl-reg-en-state {
++		pins = "gpio10";
++		function = "normal";
++	};
++
++	edp_bl_en: edp-bl-en-state {
++		pins = "gpio4";
++		function = "normal";
++		power-source = <1>; /* 1.8V */
++		input-disable;
++		output-enable;
++	};
++};
++
++&qupv3_0 {
++	status = "okay";
++};
++
++&qupv3_1 {
++	status = "okay";
++};
++
++&qupv3_2 {
++	status = "okay";
++};
++
++&remoteproc_adsp {
++	firmware-name = "qcom/x1p42100/SAMSUNG/NP750XQA/qcadsp8380.mbn",
++			"qcom/x1p42100/SAMSUNG/NP750XQA/adsp_dtbs.elf";
++
++	status = "okay";
++};
++
++&remoteproc_cdsp {
++	firmware-name = "qcom/x1p42100/SAMSUNG/NP750XQA/qccdsp8380.mbn",
++			"qcom/x1p42100/SAMSUNG/NP750XQA/cdsp_dtbs.elf";
++
++	status = "okay";
++};
++
++&sdhc_2 {
++	cd-gpios = <&tlmm 71 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&sdc2_default &sdc2_card_det_n>;
++	pinctrl-1 = <&sdc2_sleep &sdc2_card_det_n>;
++	pinctrl-names = "default", "sleep";
++	vmmc-supply = <&vreg_l9b_2p9>;
++	vqmmc-supply = <&vreg_l6b_1p8>;
++	bus-width = <4>;
++	no-sdio;
++	no-mmc;
++
++	status = "okay";
++};
++
++&swr0 {
++	status = "okay";
++
++	pinctrl-0 = <&wsa_swr_active>, <&spkr_01_sd_n_active>;
++	pinctrl-names = "default";
++
++	/* WSA883x, Left Speaker */
++	left_spkr: speaker@0,1 {
++		compatible = "sdw10217020200";
++		reg = <0 1>;
++		powerdown-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
++		#sound-dai-cells = <0>;
++		#thermal-sensor-cells = <0>;
++		sound-name-prefix = "SpkrLeft";
++		vdd-supply = <&vreg_l15b_1p8>;
++	};
++
++	/* WSA883x, Right Speaker */
++	right_spkr: speaker@0,2 {
++		compatible = "sdw10217020200";
++		reg = <0 2>;
++		powerdown-gpios = <&lpass_tlmm 12 GPIO_ACTIVE_LOW>;
++		#sound-dai-cells = <0>;
++		#thermal-sensor-cells = <0>;
++		sound-name-prefix = "SpkrRight";
++		vdd-supply = <&vreg_l15b_1p8>;
++	};
++};
++
++&swr1 {
++	status = "okay";
++
++	/* WCD9385 RX */
++	wcd_rx: codec@0,4 {
++		compatible = "sdw20217010d00";
++		reg = <0 4>;
++		qcom,rx-port-mapping = <1 2 3 4 5>;
++	};
++};
++
++&swr2 {
++	status = "okay";
++
++	/* WCD9385 TX */
++	wcd_tx: codec@0,3 {
++		compatible = "sdw20217010d00";
++		reg = <0 3>;
++		qcom,tx-port-mapping = <2 2 3 4>;
++	};
++};
++
++/* WSA2 bus: no speakers wired on this board */
++&swr3 {
++	status = "disabled";
++
++	pinctrl-0 = <&wsa2_swr_active>, <&spkr_23_sd_n_active>;
++	pinctrl-names = "default";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <34 2>, /* Unused */
++			       <44 4>; /* SPI (TPM) */
++
++	sdc2_card_det_n: sdc2-card-det-state {
++		pins = "gpio71";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++
++	rtmr1_reset_n: rtmr1-reset-n-state {
++		pins = "gpio176";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rtmr1_1p15_en: rtmr1-1p15-en-state {
++		pins = "gpio188";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rtmr1_1p8_en: rtmr1-1p8-en-state {
++		pins = "gpio175";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	rtmr1_3p3_en: rtmr1-3p3-en-state {
++		pins = "gpio186";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	eusb0_reset_n: eusb0-reset-n-state {
++		pins = "gpio10";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
++	};
++
++	eusb1_reset_n: eusb1-reset-n-state {
++		pins = "gpio19";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
++	};
++
++	edp_reg_en: edp-reg-en-state {
++		pins = "gpio70";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++
++	hall_int_n_default: hall-int-n-state {
++		pins = "gpio92";
++		function = "gpio";
++		bias-disable;
++	};
++
++	kybd_default: kybd-default-state {
++		pins = "gpio67";
++		function = "gpio";
++		bias-disable;
++	};
++
++	hdmi_hpd_default: hdmi-hpd-default-state {
++		pins = "gpio126";
++		function = "usb2_dp";
++		bias-disable;
++	};
++
++	eusb5_reset_n: eusb5-reset-n-state {
++		pins = "gpio6";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
++	};
++
++	eusb6_reset_n: eusb6-reset-n-state {
++		pins = "gpio7";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++		output-low;
++	};
++
++	pcie4_default: pcie4-default-state {
++		clkreq-n-pins {
++			pins = "gpio147";
++			function = "pcie4_clk";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++
++		perst-n-pins {
++			pins = "gpio146";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-disable;
++		};
++
++		wake-n-pins {
++			pins = "gpio148";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-pull-up;
++		};
++	};
++
++	tpad_default: tpad-default-state {
++		pins = "gpio3";
++		function = "gpio";
++		bias-disable;
++	};
++
++	usb_1_ss0_sbu_default: usb-1-ss0-sbu-state {
++		mode-pins {
++			pins = "gpio166";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++
++		oe-n-pins {
++			pins = "gpio168";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++		sel-pins {
++			pins = "gpio167";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++	};
++
++	usb_1_ss1_sbu_default: usb-1-ss1-sbu-state {
++		mode-pins {
++			pins = "gpio177";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++
++		oe-n-pins {
++			pins = "gpio179";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++		sel-pins {
++			pins = "gpio178";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++	};
++
++	usb_1_ss2_sbu_default: usb-1-ss2-sbu-state {
++		mode-pins {
++			pins = "gpio169";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++
++		oe-n-pins {
++			pins = "gpio171";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++
++		sel-pins {
++			pins = "gpio170";
++			function = "gpio";
++			bias-disable;
++			drive-strength = <2>;
++		};
++	};
++
++	wcn_sw_en: wcn-sw-en-state {
++		pins = "gpio214";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
++		pins = "gpio116", "gpio117";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	wcd_default: wcd-reset-n-active-state {
++		pins = "gpio191";
++		function = "gpio";
++		drive-strength = <16>;
++		bias-disable;
++		output-low;
++	};
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	reset-gpios = <&tlmm 238 GPIO_ACTIVE_LOW>;
++	vcc-supply = <&vreg_l17b_2p5>;
++	vcc-max-microamp = <600000>;
++
++	vccq-supply = <&vreg_l2i_1p2>;
++	vccq-max-microamp = <600000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l3i_0p8>;
++	vdda-pll-supply = <&vreg_l3e_1p2>;
++};
++
++&uart14 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn7850-bt";
++		/*
++		 * No local-bd-address: nothing on this platform injects one, and
++		 * without it the controller comes up with the QCA default address.
++		 * Put your own here (bytes reversed, e.g. AA:BB:CC:DD:EE:FF becomes
++		 * [ff ee dd cc bb aa]) or set it at runtime with btmgmt public-addr.
++		 */
++		max-speed = <3200000>;
++
++		vddaon-supply = <&vreg_pmu_aon_0p59>;
++		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
++		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
++		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
++		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
++		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
++		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
++	};
++};
++
++&uart21 {
++	compatible = "qcom,geni-debug-uart";
++	status = "okay";
++};
++
++/* usb1 covers left side typec ports */
++
++/* back(towards the display) typec port */
++&usb_1_ss0 {
++	status = "okay";
++	dr_mode = "otg";
++	usb-role-switch;
++};
++
++&usb_1_ss0_hsphy {
++	vdd-supply = <&vreg_l3j_0p8>;
++	vdda12-supply = <&vreg_l2j_1p2>;
++	phys = <&eusb0_repeater>;
++
++	status = "okay";
++};
++
++&usb_1_ss0_qmpphy {
++	vdda-phy-supply = <&vreg_l1j_0p8>;
++	vdda-pll-supply = <&vreg_l2j_1p2>;
++
++	status = "okay";
++};
++
++&usb_1_ss0_dwc3_hs {
++	remote-endpoint = <&emuec_ss0_hs_in>;
++};
++
++&usb_1_ss0_qmpphy_out {
++	remote-endpoint = <&retimer_ss0_in>;
++};
++
++/* front typec port */
++&usb_1_ss1 {
++	status = "okay";
++	dr_mode = "otg";
++	usb-role-switch;
++};
++
++&usb_1_ss1_hsphy {
++	vdd-supply = <&vreg_l3j_0p8>;
++	vdda12-supply = <&vreg_l2j_1p2>;
++	phys = <&eusb1_repeater>;
++
++	status = "okay";
++};
++
++&usb_1_ss1_qmpphy {
++	vdda-phy-supply = <&vreg_l2d_0p9>;
++	vdda-pll-supply = <&vreg_l2j_1p2>;
++
++	status = "okay";
++};
++
++&usb_1_ss1_dwc3_hs {
++	remote-endpoint = <&emuec_ss1_hs_in>;
++};
++
++&usb_1_ss1_qmpphy_out {
++	remote-endpoint = <&retimer_ss1_in>;
++};
++
++/* Native HDMI through the RTD2171 DP-to-HDMI bridge */
++&usb_1_ss2_qmpphy {
++	vdda-phy-supply = <&vreg_l2d_0p9>;
++	vdda-pll-supply = <&vreg_l2j_1p2>;
++
++	/delete-property/ mode-switch;
++	/delete-property/ orientation-switch;
++
++	status = "okay";
++
++	ports {
++		port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/delete-node/ endpoint;
++
++			usb_1_ss2_qmpphy_out_dp: endpoint@0 {
++				reg = <0>;
++
++				data-lanes = <3 2 1 0>;
++				remote-endpoint = <&hdmi_bridge_dp_in>;
++			};
++		};
++	};
++};
++
++
++/* MP0 goes to the USB-A port(USB3) and FPC */
++&usb_mp {
++	status = "okay";
++};
++
++&usb_mp_hsphy0 {
++	vdd-supply = <&vreg_l2e_0p8>;
++	vdda12-supply = <&vreg_l3e_1p2>;
++
++	phys = <&eusb5_repeater>;
++
++	status = "okay";
++};
++
++&usb_mp_hsphy1 {
++	vdd-supply = <&vreg_l2e_0p8>;
++	vdda12-supply = <&vreg_l3e_1p2>;
++
++	phys = <&eusb6_repeater>;
++
++	status = "okay";
++};
++
++&usb_mp_qmpphy0 {
++	vdda-phy-supply = <&vreg_l3e_1p2>;
++	vdda-pll-supply = <&vreg_l3c_0p8>;
++
++	status = "okay";
++};
++
++&usb_mp_qmpphy1 {
++	vdda-phy-supply = <&vreg_l3e_1p2>;
++	vdda-pll-supply = <&vreg_l3c_0p8>;
++
++	status = "okay";
++};
++
++&pmc8380_6 {
++	status = "disabled";
++};
++
++&i2c5 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	/*
++	 * ENE KB9058 embedded controller: command endpoint 0x62 here, EC-RAM
++	 * mailbox at 0x64 on i2c0. Driver: samsung-galaxybook-ec.
++	 */
++	embedded-controller@62 {
++		compatible = "samsung,galaxy-book4-edge-ec";
++		reg = <0x62>;
++
++		/* DSDT ECTC: GpioInt(Edge, ActiveLow, SharedAndWake, PullUp) pin 0x42 */
++		interrupts-extended = <&tlmm 66 IRQ_TYPE_EDGE_FALLING>;
++
++		pinctrl-0 = <&ec_int_n_default>;
++		pinctrl-names = "default";
++
++		samsung,ec-bus = <&i2c0>;
++		samsung,ec-bus-reg = <0x64>;
++
++		#cooling-cells = <2>;
++	};
++};
++
++&tlmm {
++	ec_int_n_default: ec-int-n-state {
++		pins = "gpio66";
++		function = "gpio";
++		bias-pull-up;
++	};
++};
++
++/* CPU passive throttling (95 C) so sustained load slows down instead of powering off. */
++&{/thermal-zones/cpu0-0-top-thermal} {
++	trips {
++		cpu0_0_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_0_top_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-0-btm-thermal} {
++	trips {
++		cpu0_0_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_0_btm_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-1-top-thermal} {
++	trips {
++		cpu0_1_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_1_top_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-1-btm-thermal} {
++	trips {
++		cpu0_1_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_1_btm_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-2-top-thermal} {
++	trips {
++		cpu0_2_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_2_top_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-2-btm-thermal} {
++	trips {
++		cpu0_2_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_2_btm_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-3-top-thermal} {
++	trips {
++		cpu0_3_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_3_top_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu0-3-btm-thermal} {
++	trips {
++		cpu0_3_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu0_3_btm_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-0-top-thermal} {
++	trips {
++		cpu1_0_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_0_top_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-0-btm-thermal} {
++	trips {
++		cpu1_0_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_0_btm_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-1-top-thermal} {
++	trips {
++		cpu1_1_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_1_top_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-1-btm-thermal} {
++	trips {
++		cpu1_1_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_1_btm_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-2-top-thermal} {
++	trips {
++		cpu1_2_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_2_top_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-2-btm-thermal} {
++	trips {
++		cpu1_2_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_2_btm_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-3-top-thermal} {
++	trips {
++		cpu1_3_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_3_top_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpu1-3-btm-thermal} {
++	trips {
++		cpu1_3_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpu1_3_btm_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpuss0-top-thermal} {
++	trips {
++		cpuss0_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpuss0_top_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpuss0-btm-thermal} {
++	trips {
++		cpuss0_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpuss0_btm_alert>;
++			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpuss1-top-thermal} {
++	trips {
++		cpuss1_top_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpuss1_top_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&{/thermal-zones/cpuss1-btm-thermal} {
++	trips {
++		cpuss1_btm_alert: trip-point0 {
++			temperature = <95000>;
++			hysteresis = <2000>;
++			type = "passive";
++		};
++	};
++
++	cooling-maps {
++		map0 {
++			trip = <&cpuss1_btm_alert>;
++			cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
++};
++
++&lpass_wsa2macro {
++	status = "disabled";
++};
++
++/*
++ * Type-C / charger I2C. The firmware's EMEC device (SAM0604) puts a PD
++ * controller (S2MM006) at 0x33 on i2c9 and i2c15 and the ISL9241 charger plus
++ * the SBS battery at 0x09/0x0b on i2c20. EmuEC handles the PD controllers;
++ * the ISL9241 charger still needs separate programming.
++ */
++&i2c9 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	pdic@33 {
++		compatible = "samsung,s2mm006";
++		reg = <0x33>;
++		interrupts-extended = <&tlmm 38 IRQ_TYPE_LEVEL_LOW>;
++
++		/* Left-side rear port */
++		connector {
++			compatible = "usb-c-connector";
++			power-role = "dual";
++			data-role = "dual";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					emuec_ss0_hs_in: endpoint {
++						remote-endpoint = <&usb_1_ss0_dwc3_hs>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					emuec_ss0_ss_in: endpoint {
++						remote-endpoint = <&retimer_ss0_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					emuec_ss0_sbu: endpoint {
++						remote-endpoint = <&retimer_ss0_sbu>;
++					};
++				};
++			};
++		};
++	};
++};
++
++&i2c15 {
++	clock-frequency = <400000>;
++	status = "okay";
++
++	pdic@33 {
++		compatible = "samsung,s2mm006";
++		reg = <0x33>;
++		interrupts-extended = <&tlmm 93 IRQ_TYPE_LEVEL_LOW>;
++
++		/* Left-side front port */
++		connector {
++			compatible = "usb-c-connector";
++			power-role = "dual";
++			data-role = "dual";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					emuec_ss1_hs_in: endpoint {
++						remote-endpoint = <&usb_1_ss1_dwc3_hs>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					emuec_ss1_ss_in: endpoint {
++						remote-endpoint = <&retimer_ss1_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					emuec_ss1_sbu: endpoint {
++						remote-endpoint = <&retimer_ss1_sbu>;
++					};
++				};
++			};
++		};
++	};
++};
++
++&i2c20 {
++	clock-frequency = <100000>;
++	status = "okay";
++};
++
++/*
++ * Camera. The SoC dtsi binds qcom,x1e80100-camcc, which on X1P42100 sets the
++ * csiphy timer, csid, cphy_rx and ife_0 clocks to rates the silicon does not
++ * have; the CSIPHY settle count derives from the timer rate and the D-PHY never
++ * completes HS settle.
++ */
++&camcc {
++	compatible = "qcom,x1p42100-camcc";
++	assigned-clocks = <&camcc CAM_CC_CCI_0_CLK_SRC>,
++			  <&camcc CAM_CC_CCI_1_CLK_SRC>,
++			  <&camcc CAM_CC_SLOW_AHB_CLK_SRC>,
++			  <&camcc CAM_CC_IFE_LITE_CLK_SRC>,
++			  <&camcc CAM_CC_IFE_LITE_CSID_CLK_SRC>,
++			  <&camcc CAM_CC_CPHY_RX_CLK_SRC>;
++	assigned-clock-rates = <37500000>,
++			       <37500000>,
++			       <80000000>,
++			       <400000000>,
++			       <400000000>,
++			       <400000000>;
++};
++
++/*
++ * X1P42100 has one IFE, but camss has no x1p42100 resource table and brings up
++ * two, so vfe1 defers forever. Alias vfe1 onto IFE0; nothing streams on it.
++ */
++&camss {
++	clocks = <&camcc CAM_CC_CAMNOC_AXI_NRT_CLK>,
++		 <&camcc CAM_CC_CAMNOC_AXI_RT_CLK>,
++		 <&camcc CAM_CC_CORE_AHB_CLK>,
++		 <&camcc CAM_CC_CPAS_AHB_CLK>,
++		 <&camcc CAM_CC_CPAS_FAST_AHB_CLK>,
++		 <&camcc CAM_CC_CPAS_IFE_0_CLK>,
++		 <&camcc CAM_CC_CPAS_IFE_0_CLK>,
++		 <&camcc CAM_CC_CPAS_IFE_LITE_CLK>,
++		 <&camcc CAM_CC_CPHY_RX_CLK_SRC>,
++		 <&camcc CAM_CC_CSID_CLK>,
++		 <&camcc CAM_CC_CSID_CSIPHY_RX_CLK>,
++		 <&gcc GCC_CAMERA_HF_AXI_CLK>,
++		 <&gcc GCC_CAMERA_SF_AXI_CLK>,
++		 <&camcc CAM_CC_IFE_0_CLK>,
++		 <&camcc CAM_CC_IFE_0_FAST_AHB_CLK>,
++		 <&camcc CAM_CC_IFE_0_CLK>,
++		 <&camcc CAM_CC_IFE_0_FAST_AHB_CLK>,
++		 <&camcc CAM_CC_IFE_LITE_CLK>,
++		 <&camcc CAM_CC_IFE_LITE_AHB_CLK>,
++		 <&camcc CAM_CC_IFE_LITE_CPHY_RX_CLK>,
++		 <&camcc CAM_CC_IFE_LITE_CSID_CLK>;
++
++	power-domains = <&camcc CAM_CC_IFE_0_GDSC>,
++			<&camcc CAM_CC_IFE_0_GDSC>,
++			<&camcc CAM_CC_TITAN_TOP_GDSC>;
++
++	status = "okay";
++
++	ports {
++		/* The sensor is on CSIPHY0. CSIPHY1/2 read HW version 0 on this die. */
++		port@0 {
++			csiphy0_ep: endpoint@4 {
++				reg = <4>;
++				clock-lanes = <7>;
++				data-lanes = <0 1>;
++				remote-endpoint = <&ov02c10_ep>;
++			};
++		};
++	};
++};
++
++/* The SoC dtsi gives csiphy0/1/2 no analog rails; without them the PHY runs unpowered. */
++&csiphy0 {
++	vdda-0p8-supply = <&vreg_l2c_0p8>;
++	vdda-1p2-supply = <&vreg_l1c_1p2>;
++	status = "okay";
++};
++
++&csiphy4 {
++	vdda-0p8-supply = <&vreg_l2c_0p8>;
++	vdda-1p2-supply = <&vreg_l1c_1p2>;
++	phy-type = <PHY_TYPE_DPHY>;
++	status = "okay";
++};
++
++&cci0 {
++	status = "okay";
++};
++
++&cci0_i2c0 {
++	clock-frequency = <100000>;
++
++	camera@36 {
++		compatible = "ovti,ov02c10";
++		reg = <0x36>;
++
++		reset-gpios = <&tlmm 109 GPIO_ACTIVE_LOW>;
++		pinctrl-0 = <&cam_rgb_default>;
++		pinctrl-names = "default";
++
++		clocks = <&camcc CAM_CC_MCLK4_CLK>;
++		assigned-clocks = <&camcc CAM_CC_MCLK4_CLK>;
++		assigned-clock-rates = <19200000>;
++
++		avdd-supply = <&vreg_l7b_2p8>;
++		dvdd-supply = <&vreg_l7b_2p8>;
++		dovdd-supply = <&vreg_l10b_1p8>;
++
++		orientation = <0>;
++		/* module is mounted upside down; see the ov02c10 hflip patch */
++		rotation = <180>;
++
++		port {
++			ov02c10_ep: endpoint {
++				data-lanes = <1 2>;
++				link-frequencies = /bits/ 64 <400000000>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
++
++&cci0_i2c1 {
++	clock-frequency = <100000>;
++};
++
++&cci1_i2c0 {
++	clock-frequency = <100000>;
++};
++
++&cci1_i2c1 {
++	clock-frequency = <100000>;
++};
++
++&tlmm {
++	/*
++	 * gpio96/gpio99 power the sensor; do not mux them to cam_mclk or it stops
++	 * answering I2C. MCLK4 is gpio100 (cam_aon).
++	 */
++	cam-vdd-en-96-hog {
++		gpio-hog;
++		gpios = <96 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "cam-vdd-en-96";
++	};
++
++	cam-vdd-en-99-hog {
++		gpio-hog;
++		gpios = <99 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "cam-vdd-en-99";
++	};
++
++	cam-shutter-hog {
++		gpio-hog;
++		gpios = <221 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "cam-shutter-enable";
++	};
++
++	cam-enable-hog {
++		gpio-hog;
++		gpios = <225 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "cam-enable";
++	};
++
++	cam_rgb_default: cam-rgb-default-state {
++		mclk-pins {
++			pins = "gpio100";
++			function = "cam_aon";
++			drive-strength = <16>;
++			bias-disable;
++		};
++
++		reset-n-pins {
++			pins = "gpio109";
++			function = "gpio";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++};
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+index bf3f1b3..4e24683 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+@@ -2582,15 +2582,14 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl,
+ 	while (--link_train_max_retries) {
+ 		training_step = DP_TRAINING_NONE;
+ 		rc = msm_dp_ctrl_setup_main_link(ctrl, panel, &training_step);
+-		if (rc == 0) {
+-			/* training completed successfully */
++		/* Preserve the training result when there is no retry left. */
++		if (!rc || link_train_max_retries == 1)
+ 			break;
+-		} else if (training_step == DP_TRAINING_1) {
+-			/* link train_1 failed */
+-			if (!msm_dp_aux_is_link_connected(ctrl->aux))
+-				break;
+ 
+-			drm_dp_dpcd_read_link_status(ctrl->aux, link_status);
++		if (training_step == DP_TRAINING_1) {
++			/* USB-C can report HPD out of band, so check the sink over AUX. */
++			if (drm_dp_dpcd_read_link_status(ctrl->aux, link_status) < 0)
++				break;
+ 
+ 			rc = msm_dp_ctrl_link_rate_down_shift(ctrl);
+ 			if (rc < 0) { /* already in RBR = 1.6G */
+@@ -2612,11 +2611,9 @@ int msm_dp_ctrl_on_link(struct msm_dp_ctrl *msm_dp_ctrl,
+ 			}
+ 		} else if (training_step == DP_TRAINING_2) {
+ 			/* link train_2 failed */
+-			if (!msm_dp_aux_is_link_connected(ctrl->aux))
++			if (drm_dp_dpcd_read_link_status(ctrl->aux, link_status) < 0)
+ 				break;
+ 
+-			drm_dp_dpcd_read_link_status(ctrl->aux, link_status);
+-
+ 			if (!drm_dp_clock_recovery_ok(link_status,
+ 					ctrl->link->link_params.num_lanes))
+ 				rc = msm_dp_ctrl_link_rate_down_shift(ctrl);
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index f83b93a..1f2a915 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -2171,6 +2171,7 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('I', 'V', 'O', 0x8ce6, &delay_200_500_e200, "R140NWFW R0"),
+ 
+ 	EDP_PANEL_ENTRY('K', 'D', 'B', 0x044f, &delay_200_500_e80_d50, "Unknown"),
++	EDP_PANEL_ENTRY('K', 'D', 'B', 0x0526, &delay_200_500_e50, "KD156N2030A03"),
+ 	EDP_PANEL_ENTRY('K', 'D', 'B', 0x0624, &kingdisplay_kd116n21_30nv_a010.delay, "116N21-30NV-A010"),
+ 	EDP_PANEL_ENTRY('K', 'D', 'B', 0x1118, &delay_200_500_e50, "KD116N29-30NK-A005"),
+ 	EDP_PANEL_ENTRY('K', 'D', 'B', 0x1120, &delay_200_500_e80_d50, "116N29-30NK-C007"),
+diff --git a/drivers/media/i2c/ov02c10.c b/drivers/media/i2c/ov02c10.c
+index 8ffe0a0..fc59a87 100644
+--- a/drivers/media/i2c/ov02c10.c
++++ b/drivers/media/i2c/ov02c10.c
+@@ -458,12 +458,29 @@ static int ov02c10_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		ret = ov02c10_test_pattern(ov02c10, ctrl->val);
+ 		break;
+ 
+-	case V4L2_CID_HFLIP:
++	case V4L2_CID_HFLIP: {
++		/*
++		 * Samsung Galaxy Book4 Edge: the module is mounted rotated by
++		 * 180 degrees, so the DT declares rotation = <180> and
++		 * libcamera consequently drives HFLIP and VFLIP together (it
++		 * cannot express a vertical-only transform - see the "Handle
++		 * horizontal and vertical flips independently" TODO in
++		 * camera_sensor_legacy.cpp). Applying both yields the true,
++		 * un-mirrored scene, but a laptop front camera wants a mirrored
++		 * self-view. Inverting HFLIP here leaves the vertical flip in
++		 * place while cancelling the horizontal one, which is exactly a
++		 * mirrored upright image. The flip controls carry no
++		 * MODIFY_LAYOUT flag on this sensor, so the Bayer order is
++		 * unaffected.
++		 */
++		unsigned int hflip = !ctrl->val;
++
+ 		cci_write(ov02c10->regmap, OV02C10_ISP_X_WIN_CONTROL,
+-			  ctrl->val ? 2 : 1, &ret);
++			  hflip ? 2 : 1, &ret);
+ 		cci_update_bits(ov02c10->regmap, OV02C10_ROTATE_CONTROL,
+-				BIT(3), ctrl->val ? 0 : BIT(3), &ret);
++				BIT(3), hflip ? 0 : BIT(3), &ret);
+ 		break;
++	}
+ 
+ 	case V4L2_CID_VFLIP:
+ 		cci_write(ov02c10->regmap, OV02C10_ISP_Y_WIN_CONTROL,
+diff --git a/drivers/platform/arm64/Kconfig b/drivers/platform/arm64/Kconfig
+index 3f87941..a18ab07 100644
+--- a/drivers/platform/arm64/Kconfig
++++ b/drivers/platform/arm64/Kconfig
+@@ -142,4 +142,18 @@ config EC_QCOM_HAMOA
+ 
+ 	  This driver currently supports Hamoa/Purwa/Glymur reference devices.
+ 
++config SAMSUNG_GALAXYBOOK4_EDGE
++	bool "Samsung Galaxy Book4 Edge 15.6 touchpad"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on OF_DYNAMIC
++	help
++	  Use the touchpad model selected by the NP750XQA firmware.
++
++config SAMSUNG_GALAXYBOOK4_EDGE_EC
++	tristate "Samsung Galaxy Book4 Edge embedded controller"
++	depends on ARCH_QCOM && I2C && HWMON && POWER_SUPPLY && INPUT
++	help
++	  Report battery, power and temperature on the NP750XQA and pass
++	  its performance-mode hotkey to desktop power management.
++
+ endif # ARM64_PLATFORM_DEVICES
+diff --git a/drivers/platform/arm64/Makefile b/drivers/platform/arm64/Makefile
+index 3bc3d46..94a2f5b 100644
+--- a/drivers/platform/arm64/Makefile
++++ b/drivers/platform/arm64/Makefile
+@@ -12,3 +12,5 @@ obj-$(CONFIG_EC_LENOVO_YOGA_C630) += lenovo-yoga-c630.o
+ obj-$(CONFIG_EC_LENOVO_THINKPAD_T14S) += lenovo-thinkpad-t14s.o
+ obj-$(CONFIG_EC_LENOVO_YOGA_SLIM7X_GEN11) += lenovo-yoga-slim7x-gen11-ec.o
+ obj-$(CONFIG_EC_QCOM_HAMOA) += qcom-hamoa-ec.o
++obj-$(CONFIG_SAMSUNG_GALAXYBOOK4_EDGE) += samsung-galaxybook4-edge.o
++obj-$(CONFIG_SAMSUNG_GALAXYBOOK4_EDGE_EC) += samsung-galaxybook-ec.o
+diff --git a/drivers/platform/arm64/samsung-galaxybook-ec.c b/drivers/platform/arm64/samsung-galaxybook-ec.c
+new file mode 100755
+index 0000000..9066e31
+--- /dev/null
++++ b/drivers/platform/arm64/samsung-galaxybook-ec.c
+@@ -0,0 +1,1312 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Samsung Galaxy Book4 Edge (NP750XQA) embedded controller, ENE KB9058.
++ *
++ * Two I2C endpoints: 0x62 on the private controller at 0xB94000 and 0x64 on
++ * 0xB80000 (shared with the HID keyboard). EC RAM is read through a mailbox
++ * protocol; an opcode path on 0x62 carries fan-level commands.
++ *
++ * Read-only telemetry: battery and AC state, three temperature sensors, the
++ * fan level as a cooling device. Fan writes sit behind the fan_control
++ * parameter (default off) and are limited to one whitelisted opcode.
++ *
++ * Mailbox framing after the Saddytech Galaxy-Book4-Edge-linux battery driver
++ * (GPL-2.0); register offsets from the DSDT.
++ *
++ * Copyright (C) 2026 Book4 Edge NP750XQA Linux port contributors
++ */
++
++#include <linux/bits.h>
++#include <linux/cleanup.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/hwmon.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/input.h>
++#include <linux/jiffies.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/pm.h>
++#include <linux/pm_wakeup.h>
++#include <linux/power_supply.h>
++#include <linux/minmax.h>
++#include <linux/property.h>
++#include <linux/string.h>
++#include <linux/thermal.h>
++#include <linux/workqueue.h>
++
++#define BOOK4_EC_HOTKEY_PACKET_SIZE	12
++#define BOOK4_EC_HOTKEY_PACKET		0x01
++#define BOOK4_EC_HOTKEY_PERFORMANCE	0x0b
++
++#define DRV_NAME			"samsung-galaxybook-ec"
++
++/* Mailbox framing */
++#define MBOX_WRITE_PREFIX		0x40
++#define MBOX_READ_PREFIX		0x30
++#define MBOX_READ_OK			0x50
++#define MBOX_CMD_BUF0			0xF480	/* mailbox buffer byte 0 */
++#define MBOX_CMD_EXEC			0xFF10	/* execute; data = operation */
++#define MBOX_OP_READ_EC_SPACE		0x88
++
++/* EC RAM (ACPI region space 0xA1) offsets */
++#define ECR_FLAGS			0x80	/* bit0 B1EX, bit2 ACEX */
++#define ECR_B1ST			0x84	/* ACPI _BST state word */
++#define ECR_FANS			0x87	/* 4-bit fan level, meaning unverified */
++#define ECR_B1RR			0xA0	/* remaining capacity (upper BE word) */
++#define ECR_B1PV			0xA4	/* voltage (upper), signed rate (lower) */
++#define ECR_B1AF			0xB0	/* design (lower), last full (upper) */
++#define ECR_B1VL			0xB4	/* design voltage (lower) */
++#define ECR_CTMP			0xC0
++#define ECR_CET1			0xC2
++#define ECR_CET2			0xC3
++#define ECR_CYLC			0xD0	/* cycle count, BE16 */
++
++#define FLAG_B1EX			BIT(0)
++#define FLAG_ACEX			BIT(2)
++#define B1ST_DISCHARGING		BIT(0)
++#define B1ST_CHARGING			BIT(1)
++#define B1ST_CRITICAL			BIT(2)
++
++/* Opcode path on 0x62. The only opcode this driver may send. */
++#define EC_OP_FANZONE			0x08
++#define BOOK4_EC_FAN_MAX_STATE		5	/* ACPI _FST domain */
++
++#define BOOK4_EC_MAX_BLOCK		8	/* bus-hog cap per mutex hold */
++#define BOOK4_EC_MIN_POLL_S		2
++
++static bool fan_control;
++module_param(fan_control, bool, 0444);
++MODULE_PARM_DESC(fan_control,
++		 "Let the thermal framework set the fan level (opcode 0x08). Default off; enable only after the manual->auto recovery test passed");
++
++static bool allow_poke;
++module_param(allow_poke, bool, 0644);
++MODULE_PARM_DESC(allow_poke,
++		 "Enable the raw_poke experiment (writing EC space). Default off. The EC runs charging, the fan and the gauge, so nothing here is safe by default.");
++
++static unsigned int mbox_delay_us = 5000;
++module_param(mbox_delay_us, uint, 0644);
++MODULE_PARM_DESC(mbox_delay_us, "Delay after each mailbox write frame in microseconds (default 5000, min 500)");
++
++static unsigned int poll_interval = 10;
++module_param(poll_interval, uint, 0644);
++MODULE_PARM_DESC(poll_interval, "Telemetry poll interval in seconds (default 10, min 2)");
++
++struct book4_ec_telemetry {
++	bool valid;
++	unsigned long stamp;	/* jiffies of the read */
++	u8 flags;
++	u8 bst;
++	u8 fans;
++	u8 b1rr[4];
++	u8 b1pv[4];
++	u8 ctmp, cet1, cet2;
++	u16 cycles;
++};
++
++struct book4_ec {
++	struct device *dev;
++	struct i2c_client *client;	/* 0x62 on i2c5: DT node, IRQ, opcode path */
++	struct i2c_client *client2;	/* 0x64 on i2c0, optional second face */
++	struct i2c_adapter *adap2;
++	struct i2c_client *mbox;	/* endpoint that answered the mailbox probe */
++
++	/* Serialises every EC transaction on both endpoints. */
++	struct mutex lock;
++
++	struct delayed_work poll_work;
++
++	/* Static battery data, read once at probe. */
++	u16 design_mah;
++	u16 full_mah;
++	u16 design_mv;
++
++	struct mutex cache_lock;	/* protects cache */
++	struct book4_ec_telemetry cache;
++
++	struct power_supply *bat_psy;
++	struct power_supply *ac_psy;
++	struct input_dev *hotkeys;
++
++	struct thermal_cooling_device *fan_cdev;
++	u8 fan_state;		/* last state we wrote */
++	bool fan_manual;	/* true once we took the fan off EC auto */
++	bool fan_frozen;	/* set while restoring auto: set_cur_state -> -EBUSY */
++};
++
++static inline u16 be16_at(const u8 *b)
++{
++	return ((u16)b[0] << 8) | b[1];
++}
++
++/* ---------------------------------------------------------------------- */
++/* Transport. Only these functions touch the I2C API.                      */
++/* ---------------------------------------------------------------------- */
++
++static int book4_ec_mbox_write_locked(struct book4_ec *ec, u16 cmd, u8 data)
++{
++	u8 buf[5] = { MBOX_WRITE_PREFIX, 0x00, cmd >> 8, cmd & 0xff, data };
++	unsigned int delay = max_t(unsigned int, mbox_delay_us, 500);
++	int ret;
++
++	lockdep_assert_held(&ec->lock);
++
++	dev_dbg(ec->dev, "EC mbox write %*ph -> %s\n", (int)sizeof(buf), buf,
++		dev_name(&ec->mbox->dev));
++
++	ret = i2c_master_send(ec->mbox, buf, sizeof(buf));
++	if (ret < 0)
++		return ret;
++	if (ret != sizeof(buf))
++		return -EIO;
++
++	usleep_range(delay, delay + 1000);
++	return 0;
++}
++
++static int book4_ec_mbox_read_locked(struct book4_ec *ec, u16 cmd, u8 *out)
++{
++	u8 wbuf[4] = { MBOX_READ_PREFIX, 0x00, cmd >> 8, cmd & 0xff };
++	u8 rbuf[2] = { 0, 0 };
++	struct i2c_msg msgs[2] = {
++		{
++			.addr = ec->mbox->addr,
++			.flags = 0,
++			.len = sizeof(wbuf),
++			.buf = wbuf,
++		}, {
++			.addr = ec->mbox->addr,
++			.flags = I2C_M_RD,
++			.len = sizeof(rbuf),
++			.buf = rbuf,
++		},
++	};
++	int ret;
++
++	lockdep_assert_held(&ec->lock);
++
++	/*
++	 * Write and read must be one transaction with a repeated START. A STOP
++	 * in between makes the EC drop its mailbox state.
++	 */
++	ret = i2c_transfer(ec->mbox->adapter, msgs, ARRAY_SIZE(msgs));
++	if (ret < 0)
++		return ret;
++	if (ret != ARRAY_SIZE(msgs))
++		return -EIO;
++
++	if (rbuf[0] != MBOX_READ_OK) {
++		dev_err_ratelimited(ec->dev,
++				    "EC mbox read cmd 0x%04x: status 0x%02x, expected 0x50\n",
++				    cmd, rbuf[0]);
++		return -EIO;
++	}
++
++	*out = rbuf[1];
++	return 0;
++}
++
++static int book4_ec_ram_read_once_locked(struct book4_ec *ec, u8 reg, u8 *out)
++{
++	int ret;
++
++	lockdep_assert_held(&ec->lock);
++
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_BUF0, reg);
++	if (ret)
++		return ret;
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_EXEC, MBOX_OP_READ_EC_SPACE);
++	if (ret)
++		return ret;
++	return book4_ec_mbox_read_locked(ec, MBOX_CMD_BUF0, out);
++}
++
++/* The EC occasionally answers a read with a non-0x50 status; one retry. */
++static int book4_ec_ram_read_locked(struct book4_ec *ec, u8 reg, u8 *out)
++{
++	int ret = book4_ec_ram_read_once_locked(ec, reg, out);
++
++	if (ret == -EIO)
++		ret = book4_ec_ram_read_once_locked(ec, reg, out);
++	return ret;
++}
++
++static int book4_ec_ram_read(struct book4_ec *ec, u8 reg, u8 *out)
++{
++	guard(mutex)(&ec->lock);
++
++	if (!ec->mbox)
++		return -ENODEV;
++	return book4_ec_ram_read_locked(ec, reg, out);
++}
++
++static int book4_ec_ram_read_block(struct book4_ec *ec, u8 reg, u8 *buf, size_t len)
++{
++	size_t i;
++	int ret;
++
++	if (len == 0 || len > BOOK4_EC_MAX_BLOCK || reg + len > 0x100)
++		return -EINVAL;
++
++	guard(mutex)(&ec->lock);
++
++	if (!ec->mbox)
++		return -ENODEV;
++
++	for (i = 0; i < len; i++) {
++		ret = book4_ec_ram_read_locked(ec, reg + i, &buf[i]);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
++/*
++ * Opcode path on the 0x62 endpoint. Whitelist: FANZONE only. Everything else
++ * is refused here so no caller can widen the write surface by accident.
++ */
++static int book4_ec_opcode_write_locked(struct book4_ec *ec, u8 opcode, u8 arg)
++{
++	u8 buf[2] = { opcode, arg };
++	int ret;
++
++	lockdep_assert_held(&ec->lock);
++
++	if (opcode != EC_OP_FANZONE)
++		return -EINVAL;
++
++	dev_dbg(ec->dev, "EC opcode write %*ph -> %s\n", (int)sizeof(buf), buf,
++		dev_name(&ec->client->dev));
++
++	ret = i2c_master_send(ec->client, buf, sizeof(buf));
++	if (ret < 0)
++		return ret;
++	if (ret != sizeof(buf))
++		return -EIO;
++
++	usleep_range(10000, 12000);
++	return 0;
++}
++
++/* ---------------------------------------------------------------------- */
++/* Telemetry                                                               */
++/* ---------------------------------------------------------------------- */
++
++static int book4_ec_refresh(struct book4_ec *ec)
++{
++	struct book4_ec_telemetry t = { };
++	u8 blk[8];
++	int ret;
++
++	ret = book4_ec_ram_read(ec, ECR_FLAGS, &t.flags);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read(ec, ECR_B1ST, &t.bst);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read(ec, ECR_FANS, &t.fans);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read_block(ec, ECR_B1RR, blk, 8);	/* B1RR + B1PV */
++	if (ret)
++		return ret;
++	memcpy(t.b1rr, blk, 4);
++	memcpy(t.b1pv, blk + 4, 4);
++	ret = book4_ec_ram_read(ec, ECR_CTMP, &t.ctmp);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read(ec, ECR_CET1, &t.cet1);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read(ec, ECR_CET2, &t.cet2);
++	if (ret)
++		return ret;
++	ret = book4_ec_ram_read_block(ec, ECR_CYLC, blk, 2);
++	if (ret)
++		return ret;
++	t.cycles = be16_at(blk);
++	t.valid = true;
++	t.stamp = jiffies;
++
++	guard(mutex)(&ec->cache_lock);
++	ec->cache = t;
++	return 0;
++}
++
++/* A failed refresh must not leave old values looking current. */
++static void book4_ec_invalidate(struct book4_ec *ec)
++{
++	guard(mutex)(&ec->cache_lock);
++	ec->cache.valid = false;
++}
++
++/*
++ * Cached telemetry, or an invalid snapshot if the last good read is older than
++ * three poll intervals. Readers report -ENODATA on an invalid snapshot.
++ */
++static struct book4_ec_telemetry book4_ec_snapshot(struct book4_ec *ec)
++{
++	struct book4_ec_telemetry t;
++	unsigned int interval = max_t(unsigned int, poll_interval, BOOK4_EC_MIN_POLL_S);
++
++	scoped_guard(mutex, &ec->cache_lock)
++		t = ec->cache;
++
++	if (t.valid && time_after(jiffies, t.stamp + 3 * interval * HZ))
++		t.valid = false;
++	return t;
++}
++
++static void book4_ec_poll_work(struct work_struct *work)
++{
++	struct book4_ec *ec = container_of(to_delayed_work(work), struct book4_ec, poll_work);
++	struct book4_ec_telemetry before = book4_ec_snapshot(ec);
++	unsigned int interval = max_t(unsigned int, poll_interval, BOOK4_EC_MIN_POLL_S);
++	int ret;
++
++	ret = book4_ec_refresh(ec);
++	if (ret) {
++		dev_warn_ratelimited(ec->dev, "telemetry refresh failed: %d\n", ret);
++		book4_ec_invalidate(ec);
++		power_supply_changed(ec->bat_psy);
++		power_supply_changed(ec->ac_psy);
++	} else {
++		struct book4_ec_telemetry after = book4_ec_snapshot(ec);
++
++		/* Notify on state changes and on battery-value changes (normal discharge). */
++		if (!before.valid || before.flags != after.flags || before.bst != after.bst ||
++		    memcmp(before.b1rr, after.b1rr, sizeof(after.b1rr)) ||
++		    be16_at(before.b1pv + 2) != be16_at(after.b1pv + 2)) {
++			power_supply_changed(ec->bat_psy);
++			power_supply_changed(ec->ac_psy);
++		}
++	}
++
++	schedule_delayed_work(&ec->poll_work, interval * HZ);
++}
++
++/*
++ * The dedicated interface at 0x62 reports hotkeys on the EC IRQ.
++ * Packet format follows the Anatase Galaxy Book4 Edge EC driver.
++ * Serialize the receive with mailbox traffic if both use this endpoint.
++ */
++static void book4_ec_report_hotkey(struct book4_ec *ec)
++{
++	u8 packet[BOOK4_EC_HOTKEY_PACKET_SIZE];
++	int ret;
++
++	if (!ec->hotkeys)
++		return;
++
++	scoped_guard(mutex, &ec->lock)
++		ret = i2c_master_recv(ec->client, packet, sizeof(packet));
++	if (ret != sizeof(packet) || packet[0] != BOOK4_EC_HOTKEY_PACKET ||
++	    packet[2] != BOOK4_EC_HOTKEY_PERFORMANCE)
++		return;
++
++	input_report_key(ec->hotkeys, KEY_BATTERY, 1);
++	input_sync(ec->hotkeys);
++	input_report_key(ec->hotkeys, KEY_BATTERY, 0);
++	input_sync(ec->hotkeys);
++}
++
++static irqreturn_t book4_ec_irq(int irq, void *data)
++{
++	struct book4_ec *ec = data;
++
++	/* The I2C controller is not ready immediately after resume. */
++	usleep_range(15000, 30000);
++	book4_ec_report_hotkey(ec);
++
++	if (book4_ec_refresh(ec)) {
++		dev_dbg(ec->dev, "IRQ refresh failed\n");
++		book4_ec_invalidate(ec);
++	}
++
++	power_supply_changed(ec->bat_psy);
++	power_supply_changed(ec->ac_psy);
++
++	return IRQ_HANDLED;	/* never IRQ_NONE, even on I2C error */
++}
++
++/* ---------------------------------------------------------------------- */
++/* power_supply                                                            */
++/* ---------------------------------------------------------------------- */
++
++static enum power_supply_property book4_ec_bat_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_TECHNOLOGY,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
++	POWER_SUPPLY_PROP_CURRENT_NOW,
++	POWER_SUPPLY_PROP_CHARGE_NOW,
++	POWER_SUPPLY_PROP_CHARGE_FULL,
++	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
++	POWER_SUPPLY_PROP_CAPACITY,
++	POWER_SUPPLY_PROP_CYCLE_COUNT,
++	POWER_SUPPLY_PROP_SCOPE,
++};
++
++static enum power_supply_property book4_ec_ac_props[] = {
++	POWER_SUPPLY_PROP_ONLINE,
++};
++
++static int book4_ec_bat_status(const struct book4_ec_telemetry *t, u16 remaining, u16 full)
++{
++	bool ac = t->flags & FLAG_ACEX;
++
++	if (t->bst & B1ST_CHARGING)
++		return POWER_SUPPLY_STATUS_CHARGING;
++	if (t->bst & B1ST_DISCHARGING)
++		return POWER_SUPPLY_STATUS_DISCHARGING;
++	if (ac && full && remaining != 0xFFFF && remaining * 100 >= full * 97)
++		return POWER_SUPPLY_STATUS_FULL;
++	if (ac)
++		return POWER_SUPPLY_STATUS_NOT_CHARGING;
++	return POWER_SUPPLY_STATUS_UNKNOWN;
++}
++
++static int book4_ec_bat_get_property(struct power_supply *psy,
++				     enum power_supply_property psp,
++				     union power_supply_propval *val)
++{
++	struct book4_ec *ec = power_supply_get_drvdata(psy);
++	struct book4_ec_telemetry t = book4_ec_snapshot(ec);
++	u16 remaining, voltage;
++	s16 rate;
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_TECHNOLOGY:
++		val->intval = POWER_SUPPLY_TECHNOLOGY_LIPO;	/* nameplate assumption */
++		return 0;
++	case POWER_SUPPLY_PROP_SCOPE:
++		val->intval = POWER_SUPPLY_SCOPE_SYSTEM;
++		return 0;
++	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
++		val->intval = ec->design_mah * 1000;
++		return 0;
++	case POWER_SUPPLY_PROP_CHARGE_FULL:
++		if (ec->full_mah == 0xFFFF || ec->full_mah == 0)
++			return -ENODATA;
++		val->intval = ec->full_mah * 1000;
++		return 0;
++	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
++		if (ec->design_mv == 0xFFFF || ec->design_mv == 0)
++			return -ENODATA;
++		val->intval = ec->design_mv * 1000;
++		return 0;
++	default:
++		break;
++	}
++
++	if (!t.valid)
++		return -ENODATA;
++
++	remaining = be16_at(t.b1rr + 2);
++	voltage = be16_at(t.b1pv + 2);
++	rate = (s16)be16_at(t.b1pv);
++
++	switch (psp) {
++	case POWER_SUPPLY_PROP_STATUS:
++		val->intval = book4_ec_bat_status(&t, remaining, ec->full_mah);
++		return 0;
++	case POWER_SUPPLY_PROP_PRESENT:
++		val->intval = !!(t.flags & FLAG_B1EX);
++		return 0;
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++		if (voltage == 0xFFFF)
++			return -ENODATA;
++		val->intval = voltage * 1000;
++		return 0;
++	case POWER_SUPPLY_PROP_CURRENT_NOW:
++		if (be16_at(t.b1pv) == 0xFFFF)
++			return -ENODATA;
++		/*
++		 * The EC reports the rate as a magnitude; direction comes from the
++		 * state byte. power_supply wants positive = charging.
++		 */
++		val->intval = (t.bst & B1ST_CHARGING ? 1 : -1) * abs((int)rate) * 1000;
++		return 0;
++	case POWER_SUPPLY_PROP_CHARGE_NOW:
++		if (remaining == 0xFFFF)
++			return -ENODATA;
++		val->intval = remaining * 1000;
++		return 0;
++	case POWER_SUPPLY_PROP_CAPACITY:
++		if (remaining == 0xFFFF || ec->full_mah == 0 || ec->full_mah == 0xFFFF)
++			return -ENODATA;
++		val->intval = clamp_t(int, (int)remaining * 100 / ec->full_mah, 0, 100);
++		return 0;
++	case POWER_SUPPLY_PROP_CYCLE_COUNT:
++		if (t.cycles == 0xFFFF)
++			return -ENODATA;
++		val->intval = t.cycles;
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int book4_ec_ac_get_property(struct power_supply *psy,
++				    enum power_supply_property psp,
++				    union power_supply_propval *val)
++{
++	struct book4_ec *ec = power_supply_get_drvdata(psy);
++	struct book4_ec_telemetry t = book4_ec_snapshot(ec);
++
++	if (psp != POWER_SUPPLY_PROP_ONLINE)
++		return -EINVAL;
++	if (!t.valid)
++		return -ENODATA;
++	val->intval = !!(t.flags & FLAG_ACEX);
++	return 0;
++}
++
++static const struct power_supply_desc book4_ec_bat_desc = {
++	.name = "book4-ec-battery",
++	.type = POWER_SUPPLY_TYPE_BATTERY,
++	.properties = book4_ec_bat_props,
++	.num_properties = ARRAY_SIZE(book4_ec_bat_props),
++	.get_property = book4_ec_bat_get_property,
++};
++
++static const struct power_supply_desc book4_ec_ac_desc = {
++	.name = "book4-ec-ac",
++	.type = POWER_SUPPLY_TYPE_MAINS,
++	.properties = book4_ec_ac_props,
++	.num_properties = ARRAY_SIZE(book4_ec_ac_props),
++	.get_property = book4_ec_ac_get_property,
++};
++
++/* ---------------------------------------------------------------------- */
++/* hwmon: three EC temperature bytes, units assumed degrees Celsius        */
++/* ---------------------------------------------------------------------- */
++
++static const char * const book4_ec_temp_labels[] = {
++	"ec_ctmp",
++	"ec_thermistor1",
++	"ec_thermistor2",
++};
++
++static umode_t book4_ec_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
++					 u32 attr, int channel)
++{
++	if (type != hwmon_temp)
++		return 0;
++	if (attr == hwmon_temp_input || attr == hwmon_temp_label)
++		return 0444;
++	return 0;
++}
++
++static int book4_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			       u32 attr, int channel, long *val)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	struct book4_ec_telemetry t = book4_ec_snapshot(ec);
++	u8 raw;
++
++	if (type != hwmon_temp || attr != hwmon_temp_input)
++		return -EOPNOTSUPP;
++	if (!t.valid)
++		return -ENODATA;
++
++	switch (channel) {
++	case 0:
++		raw = t.ctmp;
++		break;
++	case 1:
++		raw = t.cet1;
++		break;
++	case 2:
++		raw = t.cet2;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (raw == 0xFF || raw == 0x00)
++		return -ENODATA;
++	*val = (long)raw * 1000;
++	return 0;
++}
++
++static int book4_ec_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
++				      u32 attr, int channel, const char **str)
++{
++	if (type != hwmon_temp || attr != hwmon_temp_label)
++		return -EOPNOTSUPP;
++	if (channel < 0 || channel >= ARRAY_SIZE(book4_ec_temp_labels))
++		return -EINVAL;
++	*str = book4_ec_temp_labels[channel];
++	return 0;
++}
++
++static const struct hwmon_ops book4_ec_hwmon_ops = {
++	.is_visible = book4_ec_hwmon_is_visible,
++	.read = book4_ec_hwmon_read,
++	.read_string = book4_ec_hwmon_read_string,
++};
++
++static const struct hwmon_channel_info * const book4_ec_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL),
++	NULL
++};
++
++static const struct hwmon_chip_info book4_ec_hwmon_chip_info = {
++	.ops = &book4_ec_hwmon_ops,
++	.info = book4_ec_hwmon_info,
++};
++
++/* ---------------------------------------------------------------------- */
++/* Fan cooling device                                                      */
++/* ---------------------------------------------------------------------- */
++
++/*
++ * Hand the fan back to the EC. Sets fan_frozen first so a racing
++ * set_cur_state() is refused, then sends FANZONE 0. On success clears the
++ * manual bookkeeping. Callers decide what a failure means (suspend aborts).
++ */
++static int book4_ec_fan_restore_auto(struct book4_ec *ec)
++{
++	int ret;
++
++	guard(mutex)(&ec->lock);
++
++	ec->fan_frozen = true;
++	if (!ec->fan_manual)
++		return 0;
++
++	ret = book4_ec_opcode_write_locked(ec, EC_OP_FANZONE, 0);
++	if (ret) {
++		dev_err(ec->dev, "failed to return fan to EC control: %d\n", ret);
++		return ret;
++	}
++	ec->fan_manual = false;
++	ec->fan_state = 0;
++	return 0;
++}
++
++static void book4_ec_fan_unfreeze(struct book4_ec *ec)
++{
++	guard(mutex)(&ec->lock);
++	ec->fan_frozen = false;
++}
++
++/* devm teardown hook: runs on probe failure and after remove(). Idempotent. */
++static void book4_ec_fan_auto_action(void *data)
++{
++	struct book4_ec *ec = data;
++
++	cancel_delayed_work_sync(&ec->poll_work);
++	book4_ec_fan_restore_auto(ec);
++}
++
++static int book4_ec_fan_get_max_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	*state = BOOK4_EC_FAN_MAX_STATE;
++	return 0;
++}
++
++static int book4_ec_fan_get_cur_state(struct thermal_cooling_device *cdev, unsigned long *state)
++{
++	struct book4_ec *ec = cdev->devdata;
++
++	*state = ec->fan_state;	/* cached; state 0 means EC automatic */
++	return 0;
++}
++
++static int book4_ec_fan_set_cur_state(struct thermal_cooling_device *cdev, unsigned long state)
++{
++	struct book4_ec *ec = cdev->devdata;
++	int ret;
++
++	if (state > BOOK4_EC_FAN_MAX_STATE)
++		return -EINVAL;
++	if (!fan_control)
++		return -EOPNOTSUPP;
++
++	guard(mutex)(&ec->lock);
++
++	if (ec->fan_frozen)
++		return -EBUSY;
++
++	/* State 0 means "EC automatic control", not "fan stopped". */
++	ret = book4_ec_opcode_write_locked(ec, EC_OP_FANZONE, (u8)state);
++	if (ret)
++		return ret;
++
++	ec->fan_state = state;
++	ec->fan_manual = state != 0;
++	return 0;
++}
++
++static const struct thermal_cooling_device_ops book4_ec_fan_ops = {
++	.get_max_state = book4_ec_fan_get_max_state,
++	.get_cur_state = book4_ec_fan_get_cur_state,
++	.set_cur_state = book4_ec_fan_set_cur_state,
++};
++
++/* ---------------------------------------------------------------------- */
++/* Debug attributes: raw EC RAM bytes, read live. Read-only.               */
++/* ---------------------------------------------------------------------- */
++
++static ssize_t book4_ec_raw_show(struct device *dev, u8 reg, char *buf)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	u8 v;
++	int ret;
++
++	ret = book4_ec_ram_read(ec, reg, &v);
++	if (ret)
++		return ret;
++	return sysfs_emit(buf, "0x%02x\n", v);
++}
++
++static ssize_t raw_flags_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return book4_ec_raw_show(dev, ECR_FLAGS, buf);
++}
++
++static ssize_t raw_battery_state_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return book4_ec_raw_show(dev, ECR_B1ST, buf);
++}
++
++static ssize_t raw_fan_level_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return book4_ec_raw_show(dev, ECR_FANS, buf);
++}
++
++/*
++ * The whole 256-byte EC RAM as 32 rows of 8. One mailbox round trip per
++ * byte: a debug attribute, not something to poll.
++ */
++static ssize_t raw_ram_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	u8 row[BOOK4_EC_MAX_BLOCK];
++	unsigned int reg, i;
++	size_t len = 0;
++	int ret;
++
++	for (reg = 0; reg < 0x100; reg += BOOK4_EC_MAX_BLOCK) {
++		/* Breathe between rows; a back-to-back dump has upset the EC. */
++		if (reg)
++			usleep_range(2000, 3000);
++		ret = book4_ec_ram_read_block(ec, reg, row, BOOK4_EC_MAX_BLOCK);
++		if (ret)
++			return ret;
++		len += sysfs_emit_at(buf, len, "%02x:", reg);
++		for (i = 0; i < BOOK4_EC_MAX_BLOCK; i++)
++			len += sysfs_emit_at(buf, len, " %02x", row[i]);
++		len += sysfs_emit_at(buf, len, "\n");
++	}
++	return len;
++}
++
++/*
++ * Experimental mailbox write: takes "op reg val" and runs the obvious write
++ * shape. Gated behind allow_poke: a wrong opcode goes to the controller that
++ * runs charging, the fan and the battery gauge.
++ */
++static ssize_t raw_poke_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	unsigned int op, reg, val;
++	int ret;
++
++	if (!allow_poke)
++		return -EPERM;
++	if (sscanf(buf, "%x %x %x", &op, &reg, &val) != 3)
++		return -EINVAL;
++	if (op > 0xff || reg > 0xff || val > 0xff)
++		return -EINVAL;
++
++	guard(mutex)(&ec->lock);
++	if (!ec->mbox)
++		return -ENODEV;
++
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_BUF0, reg);
++	if (ret)
++		return ret;
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_BUF0 + 1, val);
++	if (ret)
++		return ret;
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_EXEC, op);
++	if (ret)
++		return ret;
++
++	dev_info(ec->dev, "poke: op %02x reg %02x val %02x sent\n", op, reg, val);
++	return count;
++}
++static DEVICE_ATTR_WO(raw_poke);
++
++/*
++ * Experimental mailbox read: one command byte with one offset, reply reported
++ * as is. 0x88/0x89 are EC RAM read/write; the other ACPI region spaces (e.g.
++ * BMOP 0x9E, the charge limit) have their own, still unknown, command bytes.
++ */
++static u8 last_cmd_value;
++static int last_cmd_ret;
++
++static ssize_t raw_cmd_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	unsigned int op, reg;
++	int ret;
++	u8 v = 0;
++
++	if (!allow_poke)
++		return -EPERM;
++	if (sscanf(buf, "%x %x", &op, &reg) != 2 || op > 0xff || reg > 0xff)
++		return -EINVAL;
++
++	guard(mutex)(&ec->lock);
++	if (!ec->mbox)
++		return -ENODEV;
++
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_BUF0, reg);
++	if (!ret)
++		ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_EXEC, op);
++	if (!ret)
++		ret = book4_ec_mbox_read_locked(ec, MBOX_CMD_BUF0, &v);
++
++	last_cmd_ret = ret;
++	last_cmd_value = v;
++	dev_info(ec->dev, "cmd: op %02x reg %02x -> ret %d value 0x%02x\n", op, reg, ret, v);
++	return count;
++}
++
++static ssize_t raw_cmd_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "ret %d value 0x%02x\n", last_cmd_ret, last_cmd_value);
++}
++static DEVICE_ATTR_RW(raw_cmd);
++
++/*
++ * Extended-command path (EC2.sys SecEne9058KbcSendExCmd): payload bytes to
++ * MBOX_CMD_BUF0 + i, then 0x86 to the exec register. payload[0] is the
++ * sub-command (0x06 battery trip point, 0x0D cable detect). Takes
++ * "op byte0 byte1 ..." in hex, up to 15 payload bytes.
++ */
++#define MBOX_OP_SEND_EXCMD	0x86
++#define BOOK4_EC_MAX_PAYLOAD	15
++
++static ssize_t raw_excmd_store(struct device *dev, struct device_attribute *attr,
++			       const char *buf, size_t count)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	u8 payload[BOOK4_EC_MAX_PAYLOAD], reply[BOOK4_EC_MAX_PAYLOAD] = {};
++	unsigned int op, v, len = 0, tries;
++	const char *p = buf;
++	int ret, n;
++
++	if (!allow_poke)
++		return -EPERM;
++	if (sscanf(p, "%x%n", &op, &n) != 1 || op > 0xff)
++		return -EINVAL;
++	p += n;
++	while (len < BOOK4_EC_MAX_PAYLOAD && sscanf(p, "%x%n", &v, &n) == 1) {
++		if (v > 0xff)
++			return -EINVAL;
++		payload[len++] = v;
++		p += n;
++	}
++	if (!len)
++		return -EINVAL;
++
++	guard(mutex)(&ec->lock);
++	if (!ec->mbox)
++		return -ENODEV;
++
++	for (unsigned int i = 0; i < len; i++) {
++		ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_BUF0 + i, payload[i]);
++		if (ret)
++			return ret;
++	}
++	ret = book4_ec_mbox_write_locked(ec, MBOX_CMD_EXEC, op);
++	if (ret)
++		return ret;
++
++	/*
++	 * The exec register reads non-zero while the command runs. Poll it
++	 * (1 ms, up to 30 times) before reading the response.
++	 */
++	for (tries = 0; tries < 30; tries++) {
++		u8 busy;
++
++		ret = book4_ec_mbox_read_locked(ec, MBOX_CMD_EXEC, &busy);
++		if (ret)
++			return ret;
++		if (!busy)
++			break;
++		usleep_range(1000, 1500);
++	}
++
++	for (unsigned int i = 0; i < len; i++)
++		if (book4_ec_mbox_read_locked(ec, MBOX_CMD_BUF0 + i, &reply[i]))
++			break;
++
++	dev_info(ec->dev, "excmd: op %02x sent %*ph -> after %u polls reply %*ph\n",
++		 op, len, payload, tries, len, reply);
++	return count;
++}
++static DEVICE_ATTR_WO(raw_excmd);
++
++static DEVICE_ATTR_RO(raw_flags);
++static DEVICE_ATTR_RO(raw_battery_state);
++static DEVICE_ATTR_RO(raw_fan_level);
++static DEVICE_ATTR_RO(raw_ram);
++
++static struct attribute *book4_ec_attrs[] = {
++	&dev_attr_raw_flags.attr,
++	&dev_attr_raw_battery_state.attr,
++	&dev_attr_raw_fan_level.attr,
++	&dev_attr_raw_ram.attr,
++	&dev_attr_raw_poke.attr,
++	&dev_attr_raw_cmd.attr,
++	&dev_attr_raw_excmd.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(book4_ec);
++
++/* ---------------------------------------------------------------------- */
++/* Probe helpers                                                           */
++/* ---------------------------------------------------------------------- */
++
++static void book4_ec_release_client2(void *data)
++{
++	struct book4_ec *ec = data;
++
++	if (ec->client2)
++		i2c_unregister_device(ec->client2);
++	if (ec->adap2)
++		i2c_put_adapter(ec->adap2);
++}
++
++/*
++ * Second EC face, declared by "samsung,ec-bus" (adapter phandle) and
++ * "samsung,ec-bus-reg" (address, default 0x64). Absent property: single
++ * endpoint. Present but adapter not registered yet: defer. Present and
++ * adapter up but device creation fails: hard error.
++ */
++static int book4_ec_setup_client2(struct book4_ec *ec)
++{
++	struct fwnode_handle *fw;
++	struct i2c_adapter *adap;
++	struct i2c_client *cl;
++	u32 reg = 0x64;
++	int ret;
++
++	fw = fwnode_find_reference(dev_fwnode(ec->dev), "samsung,ec-bus", 0);
++	if (IS_ERR(fw)) {
++		dev_info(ec->dev, "no samsung,ec-bus reference (%ld): single-endpoint mode\n",
++			 PTR_ERR(fw));
++		return 0;
++	}
++
++	adap = i2c_get_adapter_by_fwnode(fw);
++	fwnode_handle_put(fw);
++	if (!adap)
++		return -EPROBE_DEFER;
++
++	device_property_read_u32(ec->dev, "samsung,ec-bus-reg", &reg);
++	if (reg > 0x7f) {
++		i2c_put_adapter(adap);
++		return dev_err_probe(ec->dev, -EINVAL,
++				     "samsung,ec-bus-reg 0x%x out of range\n", reg);
++	}
++
++	cl = i2c_new_dummy_device(adap, reg);
++	if (IS_ERR(cl)) {
++		i2c_put_adapter(adap);
++		return dev_err_probe(ec->dev, PTR_ERR(cl), "cannot create second EC endpoint\n");
++	}
++
++	ec->adap2 = adap;
++	ec->client2 = cl;
++	ret = devm_add_action_or_reset(ec->dev, book4_ec_release_client2, ec);
++	if (ret)
++		return ret;
++
++	dev_info(ec->dev, "second EC endpoint 0x%02x on %s\n", reg, dev_name(&adap->dev));
++	return 0;
++}
++
++/*
++ * Identity gate. Which endpoint carries the mailbox is not determined by any
++ * static source, so try 0x62 first (private bus), then 0x64. Whichever
++ * answers a READ_EC_SPACE of the flags byte with status 0x50 is the mailbox.
++ */
++static int book4_ec_detect_mbox(struct book4_ec *ec, u8 *flags)
++{
++	struct i2c_client *cands[] = { ec->client, ec->client2 };
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(cands); i++) {
++		int ret;
++
++		if (!cands[i])
++			continue;
++
++		scoped_guard(mutex, &ec->lock) {
++			ec->mbox = cands[i];
++			ret = book4_ec_ram_read_locked(ec, ECR_FLAGS, flags);
++			if (ret)
++				ec->mbox = NULL;
++		}
++
++		if (!ret) {
++			dev_info(ec->dev, "EC mailbox answers at 0x%02x on %s (flags 0x%02x)\n",
++				 cands[i]->addr, dev_name(&cands[i]->adapter->dev), *flags);
++			return 0;
++		}
++		dev_info(ec->dev, "no mailbox at 0x%02x on %s: %d\n",
++			 cands[i]->addr, dev_name(&cands[i]->adapter->dev), ret);
++	}
++	return -ENODEV;
++}
++
++static int book4_ec_read_static(struct book4_ec *ec)
++{
++	u8 blk[8];
++	int ret;
++
++	ret = book4_ec_ram_read_block(ec, ECR_B1AF, blk, 8);	/* B1AF + B1VL */
++	if (ret)
++		return ret;
++
++	ec->design_mah = be16_at(blk);		/* B1AF lower word */
++	ec->full_mah = be16_at(blk + 2);	/* B1AF upper word */
++	ec->design_mv = be16_at(blk + 4);	/* B1VL lower word */
++
++	/* Sanity gate: refuse to export nonsense to userspace. */
++	if (ec->design_mah < 1000 || ec->design_mah > 20000)
++		return dev_err_probe(ec->dev, -ENODEV,
++				     "implausible design capacity %u mAh (raw %*ph); wrong endpoint or framing\n",
++				     ec->design_mah, 8, blk);
++
++	dev_info(ec->dev, "battery design %u mAh, last full %u mAh, design %u mV\n",
++		 ec->design_mah, ec->full_mah, ec->design_mv);
++	return 0;
++}
++
++/* ---------------------------------------------------------------------- */
++/* Driver glue                                                             */
++/* ---------------------------------------------------------------------- */
++
++static int book4_ec_register_hotkeys(struct book4_ec *ec)
++{
++	struct input_dev *input;
++	int ret;
++
++	if (ec->client->addr != 0x62 ||
++	    !of_machine_is_compatible("samsung,galaxy-book4-edge-np750xqa"))
++		return 0;
++
++	input = devm_input_allocate_device(ec->dev);
++	if (!input)
++		return -ENOMEM;
++
++	input->name = "Samsung Galaxy Book Performance Hotkey";
++	input->id.bustype = BUS_I2C;
++	input_set_capability(input, EV_KEY, KEY_BATTERY);
++
++	ret = input_register_device(input);
++	if (ret)
++		return ret;
++
++	ec->hotkeys = input;
++	return 0;
++}
++
++static int book4_ec_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct power_supply_config psy_cfg = { };
++	struct book4_ec *ec;
++	struct device *hwmon;
++	u8 flags;
++	int ret;
++
++	ec = devm_kzalloc(dev, sizeof(*ec), GFP_KERNEL);
++	if (!ec)
++		return -ENOMEM;
++
++	ec->dev = dev;
++	ec->client = client;
++	i2c_set_clientdata(client, ec);
++
++	ret = devm_mutex_init(dev, &ec->lock);
++	if (ret)
++		return ret;
++	ret = devm_mutex_init(dev, &ec->cache_lock);
++	if (ret)
++		return ret;
++	INIT_DELAYED_WORK(&ec->poll_work, book4_ec_poll_work);
++
++	ret = book4_ec_setup_client2(ec);
++	if (ret)
++		return ret;
++
++	ret = book4_ec_detect_mbox(ec, &flags);
++	if (ret)
++		return dev_err_probe(dev, ret, "EC mailbox not found on any endpoint\n");
++
++	ret = book4_ec_read_static(ec);
++	if (ret)
++		return ret;
++
++	ret = book4_ec_refresh(ec);
++	if (ret)
++		return dev_err_probe(dev, ret, "initial telemetry read failed\n");
++
++	hwmon = devm_hwmon_device_register_with_info(dev, "book4_ec", ec,
++						     &book4_ec_hwmon_chip_info, NULL);
++	if (IS_ERR(hwmon))
++		return dev_err_probe(dev, PTR_ERR(hwmon), "hwmon registration failed\n");
++
++	psy_cfg.drv_data = ec;
++	psy_cfg.fwnode = dev_fwnode(dev);
++
++	ec->bat_psy = devm_power_supply_register(dev, &book4_ec_bat_desc, &psy_cfg);
++	if (IS_ERR(ec->bat_psy))
++		return dev_err_probe(dev, PTR_ERR(ec->bat_psy), "battery registration failed\n");
++
++	ec->ac_psy = devm_power_supply_register(dev, &book4_ec_ac_desc, &psy_cfg);
++	if (IS_ERR(ec->ac_psy))
++		return dev_err_probe(dev, PTR_ERR(ec->ac_psy), "AC registration failed\n");
++
++	/*
++	 * From here on a governor may write the fan (fan_control=1). Make sure
++	 * every exit path, including a failed probe below and driver removal,
++	 * hands the fan back to the EC. Registered before the cooling device so
++	 * it runs after the device is gone.
++	 */
++	ret = devm_add_action_or_reset(dev, book4_ec_fan_auto_action, ec);
++	if (ret)
++		return ret;
++
++	/* Registered even with fan_control off so DT cooling maps can be tested. */
++	ec->fan_cdev = devm_thermal_of_cooling_device_register(dev, 0, "book4-ec-fan", ec,
++							       &book4_ec_fan_ops);
++	if (IS_ERR(ec->fan_cdev)) {
++		dev_warn(dev, "fan cooling device not registered: %ld\n", PTR_ERR(ec->fan_cdev));
++		ec->fan_cdev = NULL;
++	}
++
++	if (client->irq > 0) {
++		ret = book4_ec_register_hotkeys(ec);
++		if (ret)
++			dev_warn(dev, "performance hotkey unavailable: %d\n", ret);
++
++		ret = devm_request_threaded_irq(dev, client->irq, NULL, book4_ec_irq,
++						IRQF_ONESHOT, dev_name(dev), ec);
++		if (ret)
++			return dev_err_probe(dev, ret, "cannot request EC IRQ\n");
++		/* Wake-capable in firmware, but we cannot filter wake events yet. */
++		device_wakeup_disable(dev);
++	} else {
++		dev_warn(dev, "no IRQ; relying on polling\n");
++	}
++
++	schedule_delayed_work(&ec->poll_work,
++			      max_t(unsigned int, poll_interval, BOOK4_EC_MIN_POLL_S) * HZ);
++
++	dev_info(dev, "ready (fan control %s)\n", fan_control ? "enabled" : "disabled");
++	return 0;
++}
++
++static void book4_ec_stop(struct book4_ec *ec)
++{
++	cancel_delayed_work_sync(&ec->poll_work);
++	/* Never leave the fan under manual control of a driver that is gone. */
++	book4_ec_fan_restore_auto(ec);
++}
++
++static void book4_ec_remove(struct i2c_client *client)
++{
++	book4_ec_stop(i2c_get_clientdata(client));
++}
++
++static void book4_ec_shutdown(struct i2c_client *client)
++{
++	book4_ec_stop(i2c_get_clientdata(client));
++}
++
++static int book4_ec_suspend(struct device *dev)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++	int ret;
++
++	cancel_delayed_work_sync(&ec->poll_work);
++
++	/*
++	 * The EC keeps running and owns thermal control while the AP sleeps.
++	 * A manual level must not be latched across suspend. If the restore
++	 * fails, refuse to suspend rather than sleep with an unknown fan state.
++	 */
++	ret = book4_ec_fan_restore_auto(ec);
++	if (ret) {
++		book4_ec_fan_unfreeze(ec);
++		schedule_delayed_work(&ec->poll_work, HZ);
++		return ret;
++	}
++	return 0;
++}
++
++static int book4_ec_resume(struct device *dev)
++{
++	struct book4_ec *ec = dev_get_drvdata(dev);
++
++	book4_ec_fan_unfreeze(ec);
++
++	scoped_guard(mutex, &ec->cache_lock)
++		ec->cache.valid = false;
++
++	/* Do not replay a manual level; the governor re-drives it from real temperatures. */
++	schedule_delayed_work(&ec->poll_work, HZ);
++	return 0;
++}
++
++static DEFINE_SIMPLE_DEV_PM_OPS(book4_ec_pm_ops, book4_ec_suspend, book4_ec_resume);
++
++static const struct of_device_id book4_ec_of_match[] = {
++	{ .compatible = "samsung,galaxy-book4-edge-ec" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, book4_ec_of_match);
++
++static const struct i2c_device_id book4_ec_i2c_id[] = {
++	{ "galaxy-book4-edge-ec" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, book4_ec_i2c_id);
++
++static struct i2c_driver book4_ec_driver = {
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = book4_ec_of_match,
++		.pm = pm_sleep_ptr(&book4_ec_pm_ops),
++		.dev_groups = book4_ec_groups,
++	},
++	.probe = book4_ec_probe,
++	.remove = book4_ec_remove,
++	.shutdown = book4_ec_shutdown,
++	.id_table = book4_ec_i2c_id,
++};
++module_i2c_driver(book4_ec_driver);
++
++MODULE_DESCRIPTION("Samsung Galaxy Book4 Edge (Snapdragon X Plus) embedded controller driver");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("bookedge-fn-f11-1");
+diff --git a/drivers/platform/arm64/samsung-galaxybook4-edge.c b/drivers/platform/arm64/samsung-galaxybook4-edge.c
+new file mode 100644
+index 0000000..ac217c2
+--- /dev/null
++++ b/drivers/platform/arm64/samsung-galaxybook4-edge.c
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Samsung Galaxy Book4 Edge 15.6 (NP750XQA): turns on the touchpad Samsung fitted.
++ *
++ * The chassis takes one of four touchpads, each at its own I2C address and with its own HID
++ * descriptor register. UEFI writes which one is fitted, its address and its descriptor register
++ * into memory the DSDT calls SNVS (TPTY, TPDA and TPDO), and they are still there on a
++ * device-tree boot. The device tree has a "touchpad" node for each, all "fail-needs-probe";
++ * this turns on the one the firmware names, with the firmware's descriptor register. It runs
++ * before the I2C controller's driver loads, so the touchpad is created once, at its address.
++ */
++
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/printk.h>
++
++#define SNVS_TOUCHPAD	0xd4eea068	/* TPDF, TPTY, TPDA, TPDO */
++
++/* by TPTY: what ACPI reports, and the I2C address */
++static const struct {
++	const char *name;
++	u8 addr;
++} touchpads[] = {
++	{ "ELAN0B00", 0x15 },
++	{ "ZNT0001", 0x40 },
++	{ "SYN2602", 0x20 },
++	{ "IMG4100", 0x50 },
++};
++
++/* firmware values that are not one of the four: the Zinitix node as the device tree writes it */
++#define FALLBACK	1
++
++static struct of_changeset touchpad_cs;
++
++static int __init galaxybook4_edge_touchpad(void)
++{
++	struct device_node *np;
++	struct property *prop;
++	u8 *snvs, type, addr, descr;
++	u32 reg;
++	int ret;
++
++	if (!of_machine_is_compatible("samsung,galaxy-book4-edge-np750xqa"))
++		return 0;
++
++	snvs = memremap(SNVS_TOUCHPAD, 4, MEMREMAP_WB);
++	if (!snvs)
++		return -ENOMEM;
++	type = snvs[1];
++	addr = snvs[2];
++	descr = snvs[3];
++	memunmap(snvs);
++
++	if (type >= ARRAY_SIZE(touchpads) || addr != touchpads[type].addr || !descr) {
++		pr_warn("galaxybook4-edge: firmware touchpad %u at 0x%02x, descriptor 0x%02x: using %s\n",
++			type, addr, descr, touchpads[FALLBACK].name);
++		type = FALLBACK;
++		addr = touchpads[FALLBACK].addr;
++		descr = 0;
++	}
++
++	for_each_node_by_name(np, "touchpad") {
++		if (!of_device_is_compatible(np, "hid-over-i2c") ||
++		    of_property_read_u32(np, "reg", &reg) || reg != addr)
++			continue;
++
++		of_changeset_init(&touchpad_cs);
++		ret = 0;
++		if (descr) {
++			prop = of_find_property(np, "hid-descr-addr", NULL);
++			if (prop)
++				ret = of_changeset_remove_property(&touchpad_cs, np, prop);
++			ret = ret ?: of_changeset_add_prop_u32(&touchpad_cs, np, "hid-descr-addr",
++								 descr);
++		}
++		ret = ret ?: of_changeset_update_prop_string(&touchpad_cs, np, "status", "okay");
++		ret = ret ?: of_changeset_apply(&touchpad_cs);
++		of_node_put(np);
++		if (ret) {
++			of_changeset_destroy(&touchpad_cs);
++			pr_err("galaxybook4-edge: could not turn on the %s touchpad: %d\n",
++			       touchpads[type].name, ret);
++			return ret;
++		}
++		pr_info("galaxybook4-edge: touchpad %s at 0x%02x\n", touchpads[type].name, addr);
++		return 0;
++	}
++
++	pr_warn("galaxybook4-edge: no touchpad node at 0x%02x in the device tree\n", addr);
++	return 0;
++}
++subsys_initcall(galaxybook4_edge_touchpad);
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index fd52deb..63f08ee 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -321,6 +321,9 @@ static const struct ufs_dev_quirk ufs_fixups[] = {
+ 	{ .wmanufacturerid = UFS_VENDOR_TOSHIBA,
+ 	  .model = "THGJFJT1E45BATP",
+ 	  .quirk = UFS_DEVICE_QUIRK_NO_TIMESTAMP_SUPPORT },
++	{ .wmanufacturerid = UFS_VENDOR_TOSHIBA,
++	  .model = "THGJFJT2T85BAT0A",
++	  .quirk = UFS_DEVICE_QUIRK_NO_TIMESTAMP_SUPPORT },
+ 	{}
+ };
+ 
+diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+index 2f80c27..0fc60bb 100644
+--- a/drivers/usb/typec/Kconfig
++++ b/drivers/usb/typec/Kconfig
+@@ -46,6 +46,15 @@ menuconfig TYPEC
+ 
+ if TYPEC
+ 
++config TYPEC_SAMSUNG_EMUEC
++	tristate "Samsung EmuEC S2MM006 Type-C port controller"
++	depends on I2C && OF && POWER_SUPPLY && USB_ROLE_SWITCH
++	depends on DRM && DRM_BRIDGE
++	help
++	  Enable the Samsung S2MM006 Type-C port controller used on the
++	  Galaxy Book4 Edge. The driver handles data roles, the sink power
++	  contract and DisplayPort Alternate Mode.
++
+ source "drivers/usb/typec/tcpm/Kconfig"
+ 
+ source "drivers/usb/typec/ucsi/Kconfig"
+diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+index 8a6a1c6..c503852 100644
+--- a/drivers/usb/typec/Makefile
++++ b/drivers/usb/typec/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_TYPEC_STUSB160X) 	+= stusb160x.o
+ obj-$(CONFIG_TYPEC_RT1719)	+= rt1719.o
+ obj-$(CONFIG_TYPEC_WUSB3801)	+= wusb3801.o
+ obj-$(CONFIG_TYPEC)		+= mux/
++obj-$(CONFIG_TYPEC_SAMSUNG_EMUEC)	+= samsung-emuec.o
+diff --git a/drivers/usb/typec/samsung-emuec.c b/drivers/usb/typec/samsung-emuec.c
+new file mode 100644
+index 0000000..e437abb
+--- /dev/null
++++ b/drivers/usb/typec/samsung-emuec.c
+@@ -0,0 +1,1143 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2026 Antheas Kapenekakis <lkml@antheas.dev>
++ *
++ * Samsung EmuEC Type-C controller for the S2MM006 on Galaxy Book4 Edge.
++ * The controller firmware owns the PD policy engine. Linux selects a sink
++ * contract through its mailbox and reports the resulting Type-C state.
++ */
++
++#include <linux/bitops.h>
++#include <linux/cleanup.h>
++#include <linux/delay.h>
++#include <linux/errno.h>
++#include <linux/i2c.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/power_supply.h>
++#include <linux/slab.h>
++#include <linux/unaligned.h>
++#include <linux/usb/pd.h>
++#include <linux/usb/pd_vdo.h>
++#include <linux/usb/role.h>
++#include <linux/usb/typec.h>
++#include <linux/usb/typec_altmode.h>
++#include <linux/usb/typec_dp.h>
++#include <linux/usb/typec_mux.h>
++#include <linux/usb/typec_retimer.h>
++#include <linux/workqueue.h>
++
++#include <drm/drm_bridge.h>
++
++#define S2MM006_IRQ_FIRST		0x02
++#define S2MM006_IRQ_LAST		0x07
++#define S2MM006_REG_BC_STATUS		0x0e
++#define S2MM006_REG_CC_STATUS		0x11
++#define S2MM006_REG_CC_PIN		0x12
++#define S2MM006_REG_PD_STATUS2		0x14
++#define S2MM006_REG_PD_STATUS3		0x1a
++#define S2MM006_REG_SWITCH_STATUS	0x1c
++#define S2MM006_REG_SWITCH_COMMAND	0x4e
++#define S2MM006_REG_TX_STATUS		0x50
++#define S2MM006_REG_DP_PIN_ASSIGN	0x51
++#define S2MM006_REG_ENTER_USB_STATUS	0x56
++#define S2MM006_REG_TX_BUFFER		0x80
++#define S2MM006_REG_ACTIVE_RDO		0x6a4
++#define S2MM006_REG_SOURCE_CAPS		0x900
++#define S2MM006_REG_DISCOVER_SVID	0xa20
++#define S2MM006_REG_DISCOVER_MODE	0xa40
++#define S2MM006_REG_ENTER_MODE		0xa60
++#define S2MM006_REG_DP_ATTENTION	0xaa0
++#define S2MM006_REG_DP_STATUS		0xac0
++#define S2MM006_REG_DP_CONFIGURE	0xae0
++
++#define S2MM006_CONSUMER_COMMAND	0x12
++#define S2MM006_PROVIDER_COMMAND	0x09
++#define S2MM006_TX_REQUEST		BIT(6)
++#define S2MM006_TX_CONTINUE_ALT		BIT(1)
++#define S2MM006_DP_MODE_RECEIVED	BIT(2)
++#define S2MM006_DP_ENTER_RECEIVED	BIT(3)
++#define S2MM006_DP_STATUS_RECEIVED	BIT(5)
++#define S2MM006_DP_CONFIG_RECEIVED	BIT(6)
++#define S2MM006_DP_ATTENTION_RECEIVED	BIT(7)
++#define S2MM006_ENTER_USB_SUCCESS	(2 << 2)
++#define S2MM006_MAX_CHARGE_MW		65000
++#define S2MM006_MAX_CHARGE_MV		20000
++
++enum samsung_emuec_mode {
++	SAMSUNG_EMUEC_MODE_NONE,
++	SAMSUNG_EMUEC_MODE_CONSUMER,
++	SAMSUNG_EMUEC_MODE_PROVIDER,
++};
++
++struct samsung_emuec {
++	struct i2c_client *client;
++	struct mutex lock;
++	struct delayed_work work;
++	struct work_struct hpd_work;
++	struct device_node *connector;
++	struct drm_bridge *dp_bridge;
++	struct typec_port *port;
++	struct typec_partner *partner;
++	struct usb_power_delivery *pd;
++	struct usb_power_delivery *partner_pd;
++	struct usb_power_delivery_capabilities *source_caps;
++	struct usb_role_switch *role_sw;
++	struct typec_mux *mux;
++	struct typec_retimer *retimer;
++	struct typec_altmode dp_alt;
++	struct power_supply *psy;
++	struct power_supply_desc psy_desc;
++	enum samsung_emuec_mode attempted_mode;
++	enum typec_role power_role;
++	enum typec_data_role data_role;
++	enum typec_orientation orientation;
++	enum usb_role usb_role;
++	enum usb_mode usb_mode;
++	u32 voltage_uv;
++	u32 current_ua;
++	bool attached;
++	bool usb_mux_active;
++	bool dp_active;
++	bool dp_enter_requested;
++	bool dp_hpd;
++	bool dp_hpd_irq;
++	u8 dp_pin;
++	bool pd_attempted;
++	u8 caps_retries;
++};
++
++static int samsung_emuec_read(struct samsung_emuec *pdic, u16 reg,
++			      void *buf, size_t len)
++{
++	u8 address[] = { reg >> 8, reg & 0xff };
++	struct i2c_msg messages[] = {
++		{ .addr = pdic->client->addr, .len = sizeof(address),
++		  .buf = address },
++		{ .addr = pdic->client->addr, .flags = I2C_M_RD,
++		  .len = len, .buf = buf },
++	};
++	int ret;
++
++	ret = i2c_transfer(pdic->client->adapter, messages, ARRAY_SIZE(messages));
++	if (ret < 0)
++		return ret;
++	if (ret != ARRAY_SIZE(messages))
++		return -EIO;
++
++	return 0;
++}
++
++static int samsung_emuec_write(struct samsung_emuec *pdic, u16 reg,
++			       const void *buf, size_t len)
++{
++	u8 data[2 + 8];
++	int ret;
++
++	if (len > sizeof(data) - 2)
++		return -EINVAL;
++
++	data[0] = reg >> 8;
++	data[1] = reg & 0xff;
++	memcpy(data + 2, buf, len);
++
++	ret = i2c_master_send(pdic->client, data, len + 2);
++	if (ret < 0)
++		return ret;
++	if (ret != len + 2)
++		return -EIO;
++
++	return 0;
++}
++
++static int samsung_emuec_clear_irqs(struct samsung_emuec *pdic)
++{
++	u8 pending[S2MM006_IRQ_LAST - S2MM006_IRQ_FIRST + 1];
++	int reg, ret;
++
++	for (reg = S2MM006_IRQ_FIRST; reg <= S2MM006_IRQ_LAST; reg++) {
++		ret = samsung_emuec_read(pdic, reg,
++					&pending[reg - S2MM006_IRQ_FIRST],
++					sizeof(pending[0]));
++		if (ret)
++			return ret;
++	}
++
++	/* The Windows driver acknowledges each interrupt byte by writing it back. */
++	for (reg = S2MM006_IRQ_FIRST; reg <= S2MM006_IRQ_LAST; reg++) {
++		ret = samsung_emuec_write(pdic, reg,
++				     &pending[reg - S2MM006_IRQ_FIRST],
++				     sizeof(pending[0]));
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int samsung_emuec_get_property(struct power_supply *psy,
++				      enum power_supply_property prop,
++				      union power_supply_propval *val)
++{
++	struct samsung_emuec *pdic = power_supply_get_drvdata(psy);
++	int ret = 0;
++
++	guard(mutex)(&pdic->lock);
++	switch (prop) {
++	case POWER_SUPPLY_PROP_ONLINE:
++		val->intval = pdic->attached && pdic->power_role == TYPEC_SINK;
++		break;
++	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
++		val->intval = pdic->voltage_uv;
++		break;
++	case POWER_SUPPLY_PROP_CURRENT_MAX:
++		val->intval = pdic->current_ua;
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
++static enum power_supply_property samsung_emuec_properties[] = {
++	POWER_SUPPLY_PROP_ONLINE,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_CURRENT_MAX,
++};
++
++static void samsung_emuec_unregister_partner(struct samsung_emuec *pdic)
++{
++	usb_power_delivery_unregister_capabilities(pdic->source_caps);
++	pdic->source_caps = NULL;
++
++	if (pdic->partner_pd) {
++		typec_partner_set_usb_power_delivery(pdic->partner, NULL);
++		usb_power_delivery_unregister(pdic->partner_pd);
++		pdic->partner_pd = NULL;
++	}
++
++	if (pdic->partner) {
++		typec_unregister_partner(pdic->partner);
++		pdic->partner = NULL;
++	}
++}
++
++static int samsung_emuec_set_mux(struct samsung_emuec *pdic,
++				struct typec_mux_state *state)
++{
++	struct typec_retimer_state retimer_state = {
++		.alt = state->alt,
++		.mode = state->mode,
++		.data = state->data,
++	};
++	int ret;
++
++	ret = typec_retimer_set(pdic->retimer, &retimer_state);
++	if (ret)
++		return ret;
++
++	return typec_mux_set(pdic->mux, state);
++}
++
++static void samsung_emuec_detach(struct samsung_emuec *pdic)
++{
++	struct typec_mux_state mux_state = { .mode = TYPEC_STATE_SAFE };
++
++	if (!pdic->attached && pdic->attempted_mode == SAMSUNG_EMUEC_MODE_NONE)
++		return;
++
++	if (pdic->attached) {
++		usb_role_switch_set_role(pdic->role_sw, USB_ROLE_NONE);
++		pdic->usb_role = USB_ROLE_NONE;
++		typec_set_orientation(pdic->port, TYPEC_ORIENTATION_NONE);
++		pdic->orientation = TYPEC_ORIENTATION_NONE;
++		samsung_emuec_set_mux(pdic, &mux_state);
++		pdic->usb_mux_active = false;
++		typec_port_set_usb_mode(pdic->port, USB_MODE_NONE);
++		typec_set_pwr_opmode(pdic->port, TYPEC_PWR_MODE_USB);
++		samsung_emuec_unregister_partner(pdic);
++	}
++
++	pdic->attached = false;
++	pdic->dp_active = false;
++	pdic->dp_enter_requested = false;
++	pdic->dp_hpd_irq = false;
++	if (pdic->dp_hpd) {
++		WRITE_ONCE(pdic->dp_hpd, false);
++		schedule_work(&pdic->hpd_work);
++	}
++	pdic->dp_pin = 0;
++	pdic->pd_attempted = false;
++	pdic->usb_mode = USB_MODE_NONE;
++	pdic->caps_retries = 0;
++	pdic->attempted_mode = SAMSUNG_EMUEC_MODE_NONE;
++	pdic->voltage_uv = 0;
++	pdic->current_ua = 0;
++	if (pdic->psy)
++		power_supply_changed(pdic->psy);
++}
++
++static int samsung_emuec_read_source_caps(struct samsung_emuec *pdic,
++					  u32 *pdos, int *count, u16 *revision)
++{
++	u8 buf[4 + PDO_MAX_OBJECTS * sizeof(u32)];
++	u16 header;
++	int i, ret;
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_SOURCE_CAPS,
++				buf, sizeof(buf));
++	if (ret)
++		return ret;
++
++	header = get_unaligned_le16(buf);
++	*count = pd_header_cnt(header);
++
++	if (pd_header_type(header) != PD_DATA_SOURCE_CAP || !*count)
++		return -ENODATA;
++
++	if (pdo_type(get_unaligned_le32(buf + 4)) != PDO_TYPE_FIXED ||
++	    pdo_fixed_voltage(get_unaligned_le32(buf + 4)) != 5000)
++		return -ENODATA;
++
++	*revision = pd_header_rev(header) == PD_REV30 ? 0x0300 : 0x0200;
++	for (i = 0; i < *count; i++)
++		pdos[i] = get_unaligned_le32(buf + 4 + i * sizeof(u32));
++
++	return 0;
++}
++
++static int samsung_emuec_choose_pdo(const u32 *pdos, int count,
++				    unsigned int *mv, unsigned int *ma)
++{
++	u32 best_power = 0;
++	int best = 0, i;
++
++	for (i = 0; i < count; i++) {
++		u32 voltage, current_ma, power;
++
++		if (pdo_type(pdos[i]) != PDO_TYPE_FIXED)
++			continue;
++		voltage = pdo_fixed_voltage(pdos[i]);
++		if (!voltage || voltage > S2MM006_MAX_CHARGE_MV)
++			continue;
++		current_ma = min(pdo_max_current(pdos[i]),
++				  S2MM006_MAX_CHARGE_MW * 1000U / voltage);
++		current_ma = round_down(current_ma, 10);
++		power = voltage * current_ma / 1000;
++		if (power > best_power) {
++			best_power = power;
++			best = i + 1;
++			*mv = voltage;
++			*ma = current_ma;
++		}
++	}
++
++	return best;
++}
++
++static int samsung_emuec_active_rdo(struct samsung_emuec *pdic, u32 *rdo)
++{
++	__le32 value;
++	int ret;
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_ACTIVE_RDO,
++				&value, sizeof(value));
++	if (ret)
++		return ret;
++
++	*rdo = le32_to_cpu(value);
++	return 0;
++}
++
++static int samsung_emuec_request_pdo(struct samsung_emuec *pdic, u32 rdo)
++{
++	u8 request[8], status;
++	u32 active;
++	int ret, i;
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_TX_STATUS,
++				&status, sizeof(status));
++	if (ret)
++		return ret;
++	if (status & S2MM006_TX_REQUEST)
++		return -EBUSY;
++
++	/* The EC mailbox expects a PD Request header and a reserved halfword. */
++	put_unaligned_le16(0x1002, request);
++	put_unaligned_le16(0, request + 2);
++	put_unaligned_le32(rdo, request + 4);
++	ret = samsung_emuec_write(pdic, S2MM006_REG_TX_BUFFER,
++				 request, sizeof(request));
++	if (ret)
++		return ret;
++
++	status |= S2MM006_TX_REQUEST;
++	ret = samsung_emuec_write(pdic, S2MM006_REG_TX_STATUS,
++				  &status, sizeof(status));
++	if (ret)
++		return ret;
++
++	for (i = 0; i < 20; i++) {
++		msleep(100);
++		ret = samsung_emuec_active_rdo(pdic, &active);
++		if (ret)
++			return ret;
++		if (rdo_index(active) == rdo_index(rdo) &&
++		    rdo_op_current(active) == rdo_op_current(rdo))
++			return 0;
++	}
++
++	return -ETIMEDOUT;
++}
++
++static void samsung_emuec_update_pd(struct samsung_emuec *pdic)
++{
++	struct usb_power_delivery_capabilities_desc caps = { .role = TYPEC_SOURCE };
++	struct usb_power_delivery_desc desc;
++	u32 pdos[PDO_MAX_OBJECTS] = {}, active, requested;
++	unsigned int mv = 0, ma = 0;
++	u16 revision;
++	int count, selected, actual, ret;
++
++	ret = samsung_emuec_read_source_caps(pdic, pdos, &count, &revision);
++	if (ret) {
++		if (ret == -ENODATA && pdic->caps_retries++ < 5)
++			mod_delayed_work(system_dfl_wq, &pdic->work,
++					 msecs_to_jiffies(200));
++		return;
++	}
++
++	if (!pdic->partner_pd) {
++		desc.revision = revision;
++		desc.version = 0;
++		pdic->partner_pd = typec_partner_usb_power_delivery_register(
++							pdic->partner, &desc);
++		if (!IS_ERR(pdic->partner_pd)) {
++			memcpy(caps.pdo, pdos, sizeof(pdos));
++			pdic->source_caps = usb_power_delivery_register_capabilities(
++							pdic->partner_pd, &caps);
++			if (IS_ERR(pdic->source_caps))
++				pdic->source_caps = NULL;
++			ret = typec_partner_set_usb_power_delivery(pdic->partner,
++							pdic->partner_pd);
++			if (ret) {
++				usb_power_delivery_unregister_capabilities(
++							pdic->source_caps);
++				pdic->source_caps = NULL;
++				usb_power_delivery_unregister(pdic->partner_pd);
++				pdic->partner_pd = NULL;
++			}
++		} else {
++			pdic->partner_pd = NULL;
++		}
++	}
++
++	selected = samsung_emuec_choose_pdo(pdos, count, &mv, &ma);
++	if (!selected)
++		return;
++	ret = samsung_emuec_active_rdo(pdic, &active);
++	if (ret)
++		return;
++
++	requested = RDO_FIXED(selected, ma, ma, RDO_USB_COMM | RDO_NO_SUSPEND);
++	actual = rdo_index(active);
++	/* Firmware may already hold a stronger contract. Do not renegotiate it. */
++	if (actual < 1 || actual > count ||
++		pdo_type(pdos[actual - 1]) != PDO_TYPE_FIXED ||
++		rdo_op_current(active) > pdo_max_current(pdos[actual - 1]) ||
++		pdo_fixed_voltage(pdos[actual - 1]) *
++		rdo_op_current(active) < mv * ma) {
++		if (!pdic->pd_attempted) {
++			pdic->pd_attempted = true;
++			ret = samsung_emuec_request_pdo(pdic, requested);
++			if (ret)
++				dev_warn(&pdic->client->dev,
++						"PD contract request failed: %d\n", ret);
++			ret = samsung_emuec_active_rdo(pdic, &active);
++			if (ret)
++				return;
++		}
++	}
++
++	actual = rdo_index(active);
++	if (actual < 1 || actual > count ||
++	    pdo_type(pdos[actual - 1]) != PDO_TYPE_FIXED)
++		return;
++
++	mv = pdo_fixed_voltage(pdos[actual - 1]);
++	ma = min(rdo_op_current(active), pdo_max_current(pdos[actual - 1]));
++	if (!mv || !ma)
++		return;
++	if (pdic->voltage_uv == mv * 1000 && pdic->current_ua == ma * 1000)
++		return;
++	pdic->voltage_uv = mv * 1000;
++	pdic->current_ua = ma * 1000;
++	typec_set_pwr_opmode(pdic->port, TYPEC_PWR_MODE_PD);
++	power_supply_changed(pdic->psy);
++
++	dev_info(&pdic->client->dev, "PD contract %u mV %u mA (PDO %d)\n",
++		 mv, ma, actual);
++}
++
++static int samsung_emuec_read_vdm(struct samsung_emuec *pdic, u16 reg,
++				  u16 svid, u8 command, u8 command_type,
++				  u32 *data)
++{
++	u8 buf[12];
++	u32 vdm;
++	u16 header;
++	int ret;
++
++	ret = samsung_emuec_read(pdic, reg, buf, sizeof(buf));
++	if (ret)
++		return ret;
++
++	header = get_unaligned_le16(buf);
++	vdm = get_unaligned_le32(buf + 4);
++	if (pd_header_type(header) != PD_DATA_VENDOR_DEF ||
++	    pd_header_cnt(header) < (data ? 2 : 1) ||
++	    PD_VDO_VID(vdm) != svid || !PD_VDO_SVDM(vdm) ||
++	    PD_VDO_CMD(vdm) != command || PD_VDO_CMDT(vdm) != command_type)
++		return -ENODATA;
++
++	if (data)
++		*data = get_unaligned_le32(buf + 8);
++
++	return 0;
++}
++
++static u8 samsung_emuec_choose_dp_pin(u32 mode, u32 status)
++{
++	u8 pins = DP_CAP_PIN_ASSIGN_UFP_D(mode);
++
++	if (DP_STATUS_CONNECTION(status) != DP_STATUS_CON_UFP_D &&
++	    DP_STATUS_CONNECTION(status) != DP_STATUS_CON_BOTH)
++		return 0;
++
++	if (status & DP_STATUS_PREFER_MULTI_FUNC) {
++		if (pins & BIT(DP_PIN_ASSIGN_D))
++			return DP_PIN_ASSIGN_D;
++		if (pins & BIT(DP_PIN_ASSIGN_F))
++			return DP_PIN_ASSIGN_F;
++	}
++	if (pins & BIT(DP_PIN_ASSIGN_C))
++		return DP_PIN_ASSIGN_C;
++	if (pins & BIT(DP_PIN_ASSIGN_E))
++		return DP_PIN_ASSIGN_E;
++	if (pins & BIT(DP_PIN_ASSIGN_D))
++		return DP_PIN_ASSIGN_D;
++
++	return 0;
++}
++
++static void samsung_emuec_update_dp(struct samsung_emuec *pdic)
++{
++	struct typec_displayport_data dp_data = {};
++	struct typec_mux_state mux_state = {};
++	u32 svids, mode, dp_status, hpd_status;
++	u8 events, control, pin_reg, pin;
++	bool initial, update_hpd, hpd, irq_hpd;
++	int ret;
++
++	if (pdic->data_role != TYPEC_HOST)
++		return;
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_PD_STATUS3,
++				&events, sizeof(events));
++	if (ret)
++		return;
++
++	/* Windows clears the latched events before reading responses. */
++	if (events) {
++		control = 0;
++		ret = samsung_emuec_write(pdic, S2MM006_REG_PD_STATUS3,
++					  &control, sizeof(control));
++		if (ret)
++			return;
++	}
++
++	/* On boot, the firmware may have completed DP negotiation before probe. */
++	initial = !pdic->dp_active;
++
++	ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_DISCOVER_SVID,
++				      USB_SID_PD, CMD_DISCOVER_SVID,
++				      CMDT_RSP_ACK, &svids);
++	if (ret || (PD_VDO_SVID_SVID0(svids) != USB_TYPEC_DP_SID &&
++		    PD_VDO_SVID_SVID1(svids) != USB_TYPEC_DP_SID))
++		return;
++
++	ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_DISCOVER_MODE,
++				      USB_TYPEC_DP_SID, CMD_DISCOVER_MODES,
++				      CMDT_RSP_ACK, &mode);
++	if (ret)
++		return;
++
++	ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_ENTER_MODE,
++				      USB_TYPEC_DP_SID, CMD_ENTER_MODE,
++				      CMDT_RSP_ACK, NULL);
++
++	if (ret) {
++		if (!(events & S2MM006_DP_MODE_RECEIVED) ||
++		    pdic->dp_enter_requested)
++			return;
++
++		ret = samsung_emuec_read(pdic, S2MM006_REG_TX_STATUS,
++					 &control, sizeof(control));
++		if (ret)
++			return;
++		control |= S2MM006_TX_CONTINUE_ALT;
++		ret = samsung_emuec_write(pdic, S2MM006_REG_TX_STATUS,
++					  &control, sizeof(control));
++		if (ret)
++			return;
++		pdic->dp_enter_requested = true;
++
++		mod_delayed_work(system_dfl_wq, &pdic->work,
++				 msecs_to_jiffies(150));
++		return;
++	}
++
++	ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_DP_STATUS,
++				      USB_TYPEC_DP_SID, DP_CMD_STATUS_UPDATE,
++				      CMDT_RSP_ACK, &dp_status);
++	if (ret)
++		return;
++
++	pin = samsung_emuec_choose_dp_pin(mode, dp_status);
++	if (!pin)
++		return;
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_DP_PIN_ASSIGN,
++				&pin_reg, sizeof(pin_reg));
++	if (ret)
++		return;
++
++	if ((pin_reg & GENMASK(2, 0)) != pin) {
++		if (!(events & S2MM006_DP_STATUS_RECEIVED))
++			return;
++		pin_reg = (pin_reg & ~GENMASK(2, 0)) | pin;
++
++		ret = samsung_emuec_write(pdic, S2MM006_REG_DP_PIN_ASSIGN,
++					  &pin_reg, sizeof(pin_reg));
++		if (ret)
++			return;
++
++		mod_delayed_work(system_dfl_wq, &pdic->work,
++				 msecs_to_jiffies(150));
++		return;
++	}
++
++	ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_DP_CONFIGURE,
++				      USB_TYPEC_DP_SID, DP_CMD_CONFIGURE,
++				      CMDT_RSP_ACK, NULL);
++	if (ret)
++		return;
++
++	dp_data.status = dp_status;
++	dp_data.conf = DP_CONF_UFP_U_AS_UFP_D |
++		       DP_CONF_SET_PIN_ASSIGN(BIT(pin));
++	update_hpd = !pdic->dp_active ||
++		     (events & S2MM006_DP_STATUS_RECEIVED);
++
++	if (!pdic->dp_active || pdic->dp_pin != pin) {
++		mux_state.alt = &pdic->dp_alt;
++		mux_state.mode = TYPEC_MODAL_STATE(pin);
++		mux_state.data = &dp_data;
++		ret = samsung_emuec_set_mux(pdic, &mux_state);
++		if (ret) {
++			dev_warn(&pdic->client->dev,
++				 "failed to enable DisplayPort mux: %d\n", ret);
++			return;
++		}
++		pdic->dp_active = true;
++		pdic->dp_enter_requested = false;
++		pdic->dp_pin = pin;
++		dev_info(&pdic->client->dev,
++			 "DisplayPort Alt Mode configured with pin %c\n", 'A' + pin);
++	}
++
++	/* Attention also preserves HPD changes that happened before probe. */
++	hpd_status = dp_status;
++	if (initial || (events & S2MM006_DP_ATTENTION_RECEIVED)) {
++		ret = samsung_emuec_read_vdm(pdic, S2MM006_REG_DP_ATTENTION,
++					      USB_TYPEC_DP_SID, CMD_ATTENTION,
++					      CMDT_INIT, &hpd_status);
++		if (ret && (events & S2MM006_DP_ATTENTION_RECEIVED))
++			return;
++		if (!ret)
++			update_hpd = true;
++	}
++
++	if (!update_hpd)
++		return;
++
++	hpd = hpd_status & DP_STATUS_HPD_STATE;
++	irq_hpd = hpd && (events & S2MM006_DP_ATTENTION_RECEIVED) &&
++		  (hpd_status & DP_STATUS_IRQ_HPD);
++	if (!hpd)
++		pdic->dp_hpd_irq = false;
++	else if (irq_hpd)
++		pdic->dp_hpd_irq = true;
++
++	if (pdic->dp_hpd != hpd || irq_hpd) {
++		WRITE_ONCE(pdic->dp_hpd, hpd);
++		schedule_work(&pdic->hpd_work);
++	}
++}
++
++struct samsung_emuec_dp_bridge {
++	struct drm_bridge bridge;
++	struct samsung_emuec *pdic;
++};
++
++static void samsung_emuec_hpd_work(struct work_struct *work)
++{
++	struct samsung_emuec *pdic = container_of(work, struct samsung_emuec,
++						   hpd_work);
++
++	bool hpd, irq_hpd;
++
++	scoped_guard(mutex, &pdic->lock) {
++		hpd = pdic->dp_hpd;
++		irq_hpd = hpd && pdic->dp_hpd_irq;
++		pdic->dp_hpd_irq = false;
++	}
++
++	drm_bridge_hpd_notify_extra(pdic->dp_bridge,
++				    hpd ? connector_status_connected :
++				    connector_status_disconnected,
++				    irq_hpd ? DRM_CONNECTOR_DP_IRQ_HPD :
++				    DRM_CONNECTOR_NO_EXTRA_STATUS);
++}
++
++static void samsung_emuec_bridge_hpd_enable(struct drm_bridge *bridge)
++{
++	struct samsung_emuec_dp_bridge *dp_bridge =
++		container_of(bridge, struct samsung_emuec_dp_bridge, bridge);
++
++	if (READ_ONCE(dp_bridge->pdic->dp_hpd))
++		schedule_work(&dp_bridge->pdic->hpd_work);
++}
++
++static int samsung_emuec_bridge_attach(struct drm_bridge *bridge,
++				       struct drm_encoder *encoder,
++				       enum drm_bridge_attach_flags flags)
++{
++	return flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR ? 0 : -EINVAL;
++}
++
++static const struct drm_bridge_funcs samsung_emuec_bridge_funcs = {
++	.attach = samsung_emuec_bridge_attach,
++	.hpd_enable = samsung_emuec_bridge_hpd_enable,
++};
++
++static int samsung_emuec_register_bridge(struct samsung_emuec *pdic)
++{
++	struct device *dev = &pdic->client->dev;
++	struct samsung_emuec_dp_bridge *dp_bridge;
++	struct drm_bridge *bridge;
++
++	dp_bridge = devm_drm_bridge_alloc(dev, struct samsung_emuec_dp_bridge,
++					   bridge, &samsung_emuec_bridge_funcs);
++	if (IS_ERR(dp_bridge))
++		return PTR_ERR(dp_bridge);
++
++	dp_bridge->pdic = pdic;
++	bridge = &dp_bridge->bridge;
++	bridge->of_node = pdic->connector;
++	bridge->type = DRM_MODE_CONNECTOR_DisplayPort;
++	bridge->ops = DRM_BRIDGE_OP_HPD;
++	bridge->interlace_allowed = true;
++	bridge->ycbcr_420_allowed = true;
++	pdic->dp_bridge = bridge;
++
++	return devm_drm_bridge_add(dev, bridge);
++}
++
++static void samsung_emuec_sync(struct work_struct *work)
++{
++	struct samsung_emuec *pdic = container_of(to_delayed_work(work),
++						    struct samsung_emuec, work);
++	struct typec_mux_state mux_state = { .mode = TYPEC_STATE_USB };
++	u8 command, status_bit, bc, cc, cc_pin, pd, sw, enter_usb;
++	struct typec_partner_desc partner_desc = {
++		.accessory = TYPEC_ACCESSORY_NONE,
++		.usb_capability = 0,
++	};
++	enum samsung_emuec_mode mode;
++	enum typec_orientation orientation;
++	enum typec_role power_role;
++	enum typec_data_role data_role;
++	enum usb_role usb_role;
++	bool vbus_present, source_path_attached, consumer_path_active, attached;
++	int ret;
++
++	guard(mutex)(&pdic->lock);
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_BC_STATUS, &bc, sizeof(bc));
++	if (ret)
++		return;
++	ret = samsung_emuec_read(pdic, S2MM006_REG_CC_STATUS, &cc, sizeof(cc));
++	if (ret)
++		return;
++	ret = samsung_emuec_read(pdic, S2MM006_REG_PD_STATUS2, &pd, sizeof(pd));
++	if (ret)
++		return;
++	ret = samsung_emuec_read(pdic, S2MM006_REG_SWITCH_STATUS, &sw, sizeof(sw));
++	if (ret)
++		return;
++	ret = samsung_emuec_read(pdic, S2MM006_REG_ENTER_USB_STATUS,
++				&enter_usb, sizeof(enter_usb));
++	if (ret)
++		return;
++
++	/* CC_STATUS reports the attach type, not the active CC pin. */
++	attached = (cc >> 4) == 1 || (cc >> 4) == 2;
++	power_role = pd & BIT(3) ? TYPEC_SOURCE : TYPEC_SINK;
++	data_role = pd & BIT(2) ? TYPEC_HOST : TYPEC_DEVICE;
++	vbus_present = bc & BIT(0);
++	source_path_attached = bc & BIT(4);
++	consumer_path_active = sw & BIT(1);
++
++	if (!attached || (!vbus_present && !source_path_attached)) {
++		samsung_emuec_detach(pdic);
++		return;
++	}
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_CC_PIN, &cc_pin, sizeof(cc_pin));
++	if (ret)
++		return;
++
++	switch (cc_pin & GENMASK(1, 0)) {
++	case 1:
++		orientation = TYPEC_ORIENTATION_NORMAL;
++		break;
++	case 2:
++		orientation = TYPEC_ORIENTATION_REVERSE;
++		break;
++	default:
++		return;
++	}
++
++	/* The BC and PD role bits can settle at different times. */
++	if ((power_role == TYPEC_SOURCE && !source_path_attached) ||
++	    (power_role == TYPEC_SINK && !vbus_present))
++		return;
++
++	mode = power_role == TYPEC_SOURCE ? SAMSUNG_EMUEC_MODE_PROVIDER :
++					    SAMSUNG_EMUEC_MODE_CONSUMER;
++	command = mode == SAMSUNG_EMUEC_MODE_PROVIDER ?
++		  S2MM006_PROVIDER_COMMAND : S2MM006_CONSUMER_COMMAND;
++	status_bit = mode == SAMSUNG_EMUEC_MODE_PROVIDER ? BIT(0) : BIT(1);
++
++	if (pdic->attempted_mode != mode)
++		pdic->attempted_mode = SAMSUNG_EMUEC_MODE_NONE;
++
++	if (!(sw & status_bit) && pdic->attempted_mode != mode) {
++		ret = samsung_emuec_write(pdic, S2MM006_REG_SWITCH_COMMAND,
++					 &command, sizeof(command));
++		if (ret)
++			dev_warn(&pdic->client->dev,
++				 "failed to enable %s path: %d\n",
++				 mode == SAMSUNG_EMUEC_MODE_PROVIDER ?
++				 "provider" : "consumer", ret);
++		else {
++			pdic->attempted_mode = mode;
++			mod_delayed_work(system_dfl_wq, &pdic->work,
++					 msecs_to_jiffies(150));
++		}
++	}
++
++	if (!(sw & status_bit))
++		return;
++
++	if (pdic->attached && (pdic->power_role != power_role ||
++			       pdic->data_role != data_role))
++		samsung_emuec_detach(pdic);
++
++	if (!pdic->attached) {
++		partner_desc.usb_pd = power_role == TYPEC_SINK;
++
++		pdic->partner = typec_register_partner(pdic->port, &partner_desc);
++		if (IS_ERR(pdic->partner)) {
++			dev_warn(&pdic->client->dev,
++				 "failed to register Type-C partner: %ld\n",
++				 PTR_ERR(pdic->partner));
++			pdic->partner = NULL;
++			return;
++		}
++
++		pdic->attached = true;
++		pdic->power_role = power_role;
++		pdic->data_role = data_role;
++		typec_port_set_usb_mode(pdic->port, USB_MODE_NONE);
++		typec_set_pwr_opmode(pdic->port, TYPEC_PWR_MODE_USB);
++		pdic->voltage_uv = 0;
++		pdic->current_ua = 0;
++		power_supply_changed(pdic->psy);
++	}
++
++	if (pdic->orientation != orientation) {
++		ret = typec_set_orientation(pdic->port, orientation);
++		if (ret)
++			dev_warn(&pdic->client->dev,
++				 "failed to set connector orientation: %d\n", ret);
++		else
++			pdic->orientation = orientation;
++	}
++
++	if (!pdic->usb_mux_active && !pdic->dp_active) {
++		ret = samsung_emuec_set_mux(pdic, &mux_state);
++		if (ret)
++			dev_warn(&pdic->client->dev,
++				 "failed to enable USB mux: %d\n", ret);
++		else
++			pdic->usb_mux_active = true;
++	}
++
++	typec_set_pwr_role(pdic->port, power_role);
++	typec_set_data_role(pdic->port, data_role);
++
++	/* Windows names status 2 in these bits the Enter_USB success response. */
++	if ((enter_usb & GENMASK(3, 2)) == S2MM006_ENTER_USB_SUCCESS) {
++		if (pdic->usb_mode != USB_MODE_USB4) {
++			/* A USB4 host router must own the USB4 mux transition. */
++			typec_port_set_usb_mode(pdic->port, USB_MODE_USB4);
++			pdic->usb_mode = USB_MODE_USB4;
++		}
++	} else if (pdic->usb_mode == USB_MODE_USB4) {
++		typec_port_set_usb_mode(pdic->port, USB_MODE_NONE);
++		pdic->usb_mode = USB_MODE_NONE;
++	}
++
++	samsung_emuec_update_dp(pdic);
++
++	/* The DWC3 host timed out when started with this PHY in four-lane DP. */
++	usb_role = USB_ROLE_NONE;
++	if (data_role == TYPEC_DEVICE)
++		usb_role = USB_ROLE_DEVICE;
++	else if (!pdic->dp_enter_requested &&
++		 !(pdic->dp_active &&
++		   (pdic->dp_pin == DP_PIN_ASSIGN_C ||
++		    pdic->dp_pin == DP_PIN_ASSIGN_E)))
++		usb_role = USB_ROLE_HOST;
++
++	if (pdic->usb_role != usb_role) {
++		ret = usb_role_switch_set_role(pdic->role_sw, usb_role);
++		if (ret)
++			dev_warn(&pdic->client->dev,
++				 "failed to set USB role: %d\n", ret);
++		else
++			pdic->usb_role = usb_role;
++	}
++
++	if (power_role == TYPEC_SINK && consumer_path_active)
++		samsung_emuec_update_pd(pdic);
++
++	if (pdic->dp_active)
++		mod_delayed_work(system_dfl_wq, &pdic->work,
++				 msecs_to_jiffies(500));
++}
++
++static irqreturn_t samsung_emuec_irq_thread(int irq, void *data)
++{
++	struct samsung_emuec *pdic = data;
++	int ret;
++
++	scoped_guard(mutex, &pdic->lock)
++		ret = samsung_emuec_clear_irqs(pdic);
++	if (ret)
++		dev_warn_ratelimited(&pdic->client->dev,
++				     "failed to clear interrupt: %d\n", ret);
++
++	mod_delayed_work(system_dfl_wq, &pdic->work, 0);
++	return IRQ_HANDLED;
++}
++
++static int samsung_emuec_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct power_supply_config psy_config = {};
++	struct usb_power_delivery_desc pd_desc = { .revision = 0x0300 };
++	struct typec_capability typec_cap = {
++		.type = TYPEC_PORT_DRP,
++		.data = TYPEC_PORT_DRD,
++		.revision = USB_TYPEC_REV_2_0,
++		.pd_revision = 0x0300,
++		.orientation_aware = true,
++		.usb_capability = USB_CAPABILITY_USB2 | USB_CAPABILITY_USB3 |
++				  USB_CAPABILITY_USB4,
++		.no_mode_control = true,
++	};
++	struct samsung_emuec *pdic;
++	u8 status;
++	int ret;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
++		return dev_err_probe(dev, -EOPNOTSUPP,
++				     "adapter lacks combined I2C transfers\n");
++
++	if (client->irq <= 0)
++		return dev_err_probe(dev, -EINVAL, "missing interrupt\n");
++
++	pdic = devm_kzalloc(dev, sizeof(*pdic), GFP_KERNEL);
++	if (!pdic)
++		return -ENOMEM;
++
++	pdic->client = client;
++	pdic->dp_alt.svid = USB_TYPEC_DP_SID;
++	pdic->dp_alt.mode = USB_TYPEC_DP_MODE;
++	pdic->dp_alt.active = 1;
++	mutex_init(&pdic->lock);
++	INIT_DELAYED_WORK(&pdic->work, samsung_emuec_sync);
++	INIT_WORK(&pdic->hpd_work, samsung_emuec_hpd_work);
++	i2c_set_clientdata(client, pdic);
++
++	ret = samsung_emuec_read(pdic, S2MM006_REG_SWITCH_STATUS,
++				&status, sizeof(status));
++	if (ret)
++		return dev_err_probe(dev, ret, "unable to read PDIC status\n");
++
++	pdic->connector = of_get_child_by_name(dev->of_node, "connector");
++	if (!pdic->connector)
++		return dev_err_probe(dev, -EINVAL, "missing Type-C connector\n");
++
++	typec_cap.fwnode = of_fwnode_handle(pdic->connector);
++	typec_cap.driver_data = pdic;
++
++	pdic->role_sw = fwnode_usb_role_switch_get(typec_cap.fwnode);
++	if (IS_ERR(pdic->role_sw)) {
++		ret = PTR_ERR(pdic->role_sw);
++		goto err_node;
++	}
++	if (!pdic->role_sw) {
++		ret = -ENODEV;
++		goto err_node;
++	}
++
++	pdic->mux = fwnode_typec_mux_get(typec_cap.fwnode);
++	if (IS_ERR(pdic->mux)) {
++		ret = PTR_ERR(pdic->mux);
++		goto err_role;
++	}
++
++	pdic->retimer = fwnode_typec_retimer_get(typec_cap.fwnode);
++	if (IS_ERR(pdic->retimer)) {
++		ret = PTR_ERR(pdic->retimer);
++		goto err_mux;
++	}
++	if (!pdic->mux && !pdic->retimer) {
++		ret = -ENODEV;
++		goto err_retimer;
++	}
++
++	pdic->port = typec_register_port(dev, &typec_cap);
++	if (IS_ERR(pdic->port)) {
++		ret = PTR_ERR(pdic->port);
++		goto err_retimer;
++	}
++
++	pdic->pd = usb_power_delivery_register(dev, &pd_desc);
++	if (IS_ERR(pdic->pd)) {
++		ret = PTR_ERR(pdic->pd);
++		goto err_port;
++	}
++
++	ret = typec_port_set_usb_power_delivery(pdic->port, pdic->pd);
++	if (ret)
++		goto err_pd;
++
++	pdic->psy_desc.name = devm_kasprintf(dev, GFP_KERNEL, "%s-usb",
++					       dev_name(dev));
++	if (!pdic->psy_desc.name) {
++		ret = -ENOMEM;
++		goto err_pd;
++	}
++
++	pdic->psy_desc.type = POWER_SUPPLY_TYPE_USB_PD;
++	pdic->psy_desc.properties = samsung_emuec_properties;
++	pdic->psy_desc.num_properties = ARRAY_SIZE(samsung_emuec_properties);
++	pdic->psy_desc.get_property = samsung_emuec_get_property;
++	psy_config.drv_data = pdic;
++	psy_config.fwnode = of_fwnode_handle(pdic->connector);
++
++	pdic->psy = devm_power_supply_register(dev, &pdic->psy_desc, &psy_config);
++	if (IS_ERR(pdic->psy)) {
++		ret = PTR_ERR(pdic->psy);
++		goto err_pd;
++	}
++
++	ret = samsung_emuec_clear_irqs(pdic);
++	if (ret)
++		goto err_pd;
++
++	ret = samsung_emuec_register_bridge(pdic);
++	if (ret)
++		goto err_pd;
++
++	ret = devm_request_threaded_irq(dev, client->irq, NULL,
++					samsung_emuec_irq_thread, IRQF_ONESHOT,
++					dev_name(dev), pdic);
++	if (ret)
++		goto err_pd;
++
++	mod_delayed_work(system_dfl_wq, &pdic->work, 0);
++	return 0;
++
++err_pd:
++	typec_port_set_usb_power_delivery(pdic->port, NULL);
++	usb_power_delivery_unregister(pdic->pd);
++err_port:
++	typec_unregister_port(pdic->port);
++err_retimer:
++	typec_retimer_put(pdic->retimer);
++err_mux:
++	typec_mux_put(pdic->mux);
++err_role:
++	usb_role_switch_put(pdic->role_sw);
++err_node:
++	of_node_put(pdic->connector);
++	return ret;
++}
++
++static void samsung_emuec_remove(struct i2c_client *client)
++{
++	struct samsung_emuec *pdic = i2c_get_clientdata(client);
++
++	devm_free_irq(&client->dev, client->irq, pdic);
++	cancel_delayed_work_sync(&pdic->work);
++
++	scoped_guard(mutex, &pdic->lock)
++		samsung_emuec_detach(pdic);
++	flush_work(&pdic->hpd_work);
++
++	typec_port_set_usb_power_delivery(pdic->port, NULL);
++	usb_power_delivery_unregister(pdic->pd);
++	typec_unregister_port(pdic->port);
++	typec_retimer_put(pdic->retimer);
++	typec_mux_put(pdic->mux);
++	usb_role_switch_put(pdic->role_sw);
++	of_node_put(pdic->connector);
++}
++
++static const struct of_device_id samsung_emuec_of_match[] = {
++	{ .compatible = "samsung,s2mm006" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, samsung_emuec_of_match);
++
++static struct i2c_driver samsung_emuec_driver = {
++	.driver = {
++		.name = "samsung-emuec",
++		.of_match_table = samsung_emuec_of_match,
++	},
++	.probe = samsung_emuec_probe,
++	.remove = samsung_emuec_remove,
++};
++module_i2c_driver(samsung_emuec_driver);
++
++MODULE_DESCRIPTION("Samsung EmuEC USB Type-C and Power Delivery driver");
++MODULE_LICENSE("GPL");
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index be3b320..817abbc 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -2486,7 +2486,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+ 		 * is in the CMA area.
+ 		 */
+ 		if (alloc_flags & ALLOC_CMA &&
+-		    zone_page_state(zone, NR_FREE_CMA_PAGES) >
++		    min(zone_page_state(zone, NR_FREE_CMA_PAGES), zone_cma_pages(zone)) >
+ 		    zone_page_state(zone, NR_FREE_PAGES) / 2) {
+ 			page = __rmqueue_cma_fallback(zone, order);
+ 			if (page)
+@@ -3594,9 +3594,15 @@ static inline long __zone_watermark_unusable_free(struct zone *z,
+ 		unusable_free += READ_ONCE(z->nr_free_highatomic);
+ 
+ #ifdef CONFIG_CMA
+-	/* If allocation can't use CMA areas don't use free CMA pages */
++	/*
++	 * If allocation can't use CMA areas don't use free CMA pages. Never count
++	 * more than the zone's CMA pages: on the Book4 Edge (X1P42100) the
++	 * NR_FREE_CMA_PAGES counter drifts far past the 128 MB pool during uptime,
++	 * which made usable free negative and starved kswapd and atomic allocations.
++	 */
+ 	if (!(alloc_flags & ALLOC_CMA))
+-		unusable_free += zone_page_state(z, NR_FREE_CMA_PAGES);
++		unusable_free += min(zone_page_state(z, NR_FREE_CMA_PAGES),
++				     zone_cma_pages(z));
+ #endif
+ 
+ 	return unusable_free;
+diff --git a/sound/soc/qcom/x1e80100.c b/sound/soc/qcom/x1e80100.c
+index c81df41..ac874b3 100644
+--- a/sound/soc/qcom/x1e80100.c
++++ b/sound/soc/qcom/x1e80100.c
+@@ -2,6 +2,7 @@
+ // Copyright (c) 2023, Linaro Limited
+ 
+ #include <dt-bindings/sound/qcom,q6afe.h>
++#include <linux/dmi.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/soundwire/sdw.h>
+@@ -178,11 +179,28 @@ static void x1e80100_add_be_ops(struct snd_soc_card *card)
+ 	}
+ }
+ 
++/*
++ * UCM finds a card's profile by its DMI long name, which ends in the board name. On the
++ * Galaxy Book4 Edge 15.6 the board name carries the keyboard's country (NP750XQA-KB2UK, ...),
++ * so the card gets one name for every keyboard.
++ */
++static const struct dmi_system_id x1e80100_long_names[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "SAMSUNG ELECTRONICS CO., LTD."),
++			DMI_MATCH(DMI_BOARD_NAME, "NP750XQA"),
++		},
++		.driver_data = (void *)"Samsung-GalaxyBook4Edge",
++	},
++	{}
++};
++
+ static int x1e80100_platform_probe(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card;
+ 	struct x1e80100_snd_data *data;
+ 	struct device *dev = &pdev->dev;
++	const struct dmi_system_id *id;
+ 	int ret;
+ 
+ 	card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
+@@ -203,6 +221,9 @@ static int x1e80100_platform_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	card->driver_name = of_device_get_match_data(dev);
++	id = dmi_first_match(x1e80100_long_names);
++	if (id)
++		card->long_name = id->driver_data;
+ 	x1e80100_add_be_ops(card);
+ 
+ 	return devm_snd_soc_register_card(dev, card);

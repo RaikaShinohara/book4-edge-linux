@@ -93,3 +93,5 @@ The active-CC-pin correction is based on the
 [Book4 Edge community patch](https://github.com/n1c0la84/book4-edge-linux/blob/main/drivers/anatase/patches/0004-samsung-emuec-orientation-from-cc-pin.patch).
 
 - [EL2 boot and KVM](kvm.md) use a separate systemd-boot entry.
+
+- [Experimental USB-C DisplayPort MST](mst.md) uses a separate linux-next build.
