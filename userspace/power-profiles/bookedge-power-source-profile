@@ -1,0 +1,62 @@
+#!/usr/bin/python
+import sys
+
+from gi.repository import Gio, GLib
+
+
+def main():
+    loop = GLib.MainLoop()
+    session = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+    upower = Gio.DBusProxy.new_for_bus_sync(
+        Gio.BusType.SYSTEM,
+        Gio.DBusProxyFlags.NONE,
+        None,
+        "org.freedesktop.UPower",
+        "/org/freedesktop/UPower",
+        "org.freedesktop.UPower",
+        None,
+    )
+    previous_on_battery = None
+    failed = False
+
+    def update_profile(*_):
+        nonlocal previous_on_battery, failed
+        property_value = upower.get_cached_property("OnBattery")
+        if property_value is None:
+            return
+        on_battery = property_value.get_boolean()
+        if on_battery == previous_on_battery:
+            return
+
+        profile = "power-saver" if on_battery else "performance"
+        try:
+            session.call_sync(
+                "org.kde.Solid.PowerManagement",
+                "/org/kde/Solid/PowerManagement/Actions/PowerProfile",
+                "org.kde.Solid.PowerManagement.Actions.PowerProfile",
+                "setProfile",
+                GLib.Variant("(s)", (profile,)),
+                None,
+                Gio.DBusCallFlags.NONE,
+                10000,
+                None,
+            )
+        except GLib.Error as error:
+            print(f"No se pudo activar el perfil {profile}: {error}", file=sys.stderr)
+            failed = True
+            loop.quit()
+            return
+
+        previous_on_battery = on_battery
+        print(f"Perfil de energía aplicado: {profile}", flush=True)
+
+    upower.connect("g-properties-changed", update_profile)
+    upower.connect("notify::g-name-owner", update_profile)
+    update_profile()
+    if not failed:
+        loop.run()
+    return int(failed)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

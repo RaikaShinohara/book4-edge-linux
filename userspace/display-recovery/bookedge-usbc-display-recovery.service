@@ -1,0 +1,13 @@
+[Unit]
+Description=Recuperación de vídeo del puerto USB-C 1 del Galaxy Book4 Edge
+PartOf=graphical-session.target
+After=plasma-kwin_wayland.service
+
+[Service]
+Type=exec
+ExecStart=/usr/local/bin/bookedge-display-recovery
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=plasma-workspace-wayland.target

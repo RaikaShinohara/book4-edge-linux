@@ -1,0 +1,13 @@
+[Unit]
+Description=Perfiles de energía de Plasma según el cargador
+After=plasma-powerdevil.service
+PartOf=graphical-session.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/python %h/.local/bin/bookedge-power-source-profile
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=plasma-workspace.target

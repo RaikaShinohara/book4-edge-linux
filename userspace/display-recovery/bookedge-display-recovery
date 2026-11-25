@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+
+import argparse
+import json
+from pathlib import Path
+import subprocess
+import time
+
+CONNECTOR = "DP-1"
+DRM = Path("/sys/class/drm")
+
+
+def kernel_state():
+    try:
+        outputs = list(DRM.glob(f"card*-{CONNECTOR}"))
+        if len(outputs) != 1:
+            return None, None
+        output = outputs[0]
+        return (
+            (output / "status").read_text().strip(),
+            (output / "enabled").read_text().strip(),
+        )
+    except FileNotFoundError:
+        return None, None
+
+
+def recover():
+    if kernel_state() != ("connected", "disabled"):
+        return False
+
+    data = subprocess.check_output(
+        ["kscreen-doctor", "--json"], timeout=5, text=True
+    )
+    output = next(
+        (output for output in json.loads(data)["outputs"] if output["name"] == CONNECTOR),
+        None,
+    )
+    if not output or not (output["connected"] and output["enabled"]):
+        return False
+    mode = output["currentModeId"]
+    if not mode or kernel_state() != ("connected", "disabled"):
+        return False
+
+    subprocess.run(
+        ["kscreen-doctor", f"output.{CONNECTOR}.mode.{mode}"],
+        check=True,
+        timeout=8,
+    )
+    time.sleep(0.5)
+    if kernel_state() == ("connected", "enabled"):
+        print(f"Recuperada la salida {CONNECTOR} en el modo {mode}.", flush=True)
+        return True
+    print(f"{CONNECTOR} sigue apagada tras reaplicar el modo {mode}.", flush=True)
+    return False
+
+
+def watch():
+    inactive_since = None
+    next_check = 0.0
+    while True:
+        now = time.monotonic()
+        if kernel_state() != ("connected", "disabled"):
+            inactive_since = None
+        elif inactive_since is None:
+            inactive_since = now
+            next_check = now + 2
+        elif now >= next_check and now - inactive_since < 18:
+            next_check = now + 5
+            try:
+                if recover():
+                    next_check = float("inf")
+            except (subprocess.SubprocessError, json.JSONDecodeError) as error:
+                print(f"No se pudo comprobar la pantalla: {error}", flush=True)
+        time.sleep(0.5)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--once", action="store_true")
+    if parser.parse_args().once:
+        recover()
+    else:
+        watch()

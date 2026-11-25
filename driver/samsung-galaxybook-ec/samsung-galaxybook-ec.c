@@ -23,6 +23,7 @@
 #include <linux/hwmon.h>
 #include <linux/i2c.h>
 #include <linux/interrupt.h>
+#include <linux/input.h>
 #include <linux/jiffies.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
@@ -35,6 +36,10 @@
 #include <linux/string.h>
 #include <linux/thermal.h>
 #include <linux/workqueue.h>
+
+#define BOOK4_EC_HOTKEY_PACKET_SIZE	12
+#define BOOK4_EC_HOTKEY_PACKET		0x01
+#define BOOK4_EC_HOTKEY_PERFORMANCE	0x0b
 
 #define DRV_NAME			"samsung-galaxybook-ec"
 
@@ -124,6 +129,7 @@ struct book4_ec {
 
 	struct power_supply *bat_psy;
 	struct power_supply *ac_psy;
+	struct input_dev *hotkeys;
 
 	struct thermal_cooling_device *fan_cdev;
 	u8 fan_state;		/* last state we wrote */
@@ -382,12 +388,38 @@ static void book4_ec_poll_work(struct work_struct *work)
 	schedule_delayed_work(&ec->poll_work, interval * HZ);
 }
 
+/*
+ * The dedicated interface at 0x62 reports hotkeys on the EC IRQ.
+ * Packet format follows the Anatase Galaxy Book4 Edge EC driver.
+ * Serialize the receive with mailbox traffic if both use this endpoint.
+ */
+static void book4_ec_report_hotkey(struct book4_ec *ec)
+{
+	u8 packet[BOOK4_EC_HOTKEY_PACKET_SIZE];
+	int ret;
+
+	if (!ec->hotkeys)
+		return;
+
+	scoped_guard(mutex, &ec->lock)
+		ret = i2c_master_recv(ec->client, packet, sizeof(packet));
+	if (ret != sizeof(packet) || packet[0] != BOOK4_EC_HOTKEY_PACKET ||
+	    packet[2] != BOOK4_EC_HOTKEY_PERFORMANCE)
+		return;
+
+	input_report_key(ec->hotkeys, KEY_BATTERY, 1);
+	input_sync(ec->hotkeys);
+	input_report_key(ec->hotkeys, KEY_BATTERY, 0);
+	input_sync(ec->hotkeys);
+}
+
 static irqreturn_t book4_ec_irq(int irq, void *data)
 {
 	struct book4_ec *ec = data;
 
 	/* The I2C controller is not ready immediately after resume. */
 	usleep_range(15000, 30000);
+	book4_ec_report_hotkey(ec);
 
 	if (book4_ec_refresh(ec)) {
 		dev_dbg(ec->dev, "IRQ refresh failed\n");
@@ -1073,6 +1105,31 @@ static int book4_ec_read_static(struct book4_ec *ec)
 /* Driver glue                                                             */
 /* ---------------------------------------------------------------------- */
 
+static int book4_ec_register_hotkeys(struct book4_ec *ec)
+{
+	struct input_dev *input;
+	int ret;
+
+	if (ec->client->addr != 0x62 ||
+	    !of_machine_is_compatible("samsung,galaxy-book4-edge-np750xqa"))
+		return 0;
+
+	input = devm_input_allocate_device(ec->dev);
+	if (!input)
+		return -ENOMEM;
+
+	input->name = "Samsung Galaxy Book Performance Hotkey";
+	input->id.bustype = BUS_I2C;
+	input_set_capability(input, EV_KEY, KEY_BATTERY);
+
+	ret = input_register_device(input);
+	if (ret)
+		return ret;
+
+	ec->hotkeys = input;
+	return 0;
+}
+
 static int book4_ec_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
@@ -1149,6 +1206,10 @@ static int book4_ec_probe(struct i2c_client *client)
 	}
 
 	if (client->irq > 0) {
+		ret = book4_ec_register_hotkeys(ec);
+		if (ret)
+			dev_warn(dev, "performance hotkey unavailable: %d\n", ret);
+
 		ret = devm_request_threaded_irq(dev, client->irq, NULL, book4_ec_irq,
 						IRQF_ONESHOT, dev_name(dev), ec);
 		if (ret)
@@ -1248,3 +1309,4 @@ module_i2c_driver(book4_ec_driver);
 
 MODULE_DESCRIPTION("Samsung Galaxy Book4 Edge (Snapdragon X Plus) embedded controller driver");
 MODULE_LICENSE("GPL");
+MODULE_VERSION("bookedge-fn-f11-1");

@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 21:10:57 +0000
+Subject: [PATCH] drm/msm/dp: add an opt-in HBR2 TPS3 diagnostic for repeaters
+
+---
+ drivers/gpu/drm/msm/dp/dp_ctrl.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/dp/dp_ctrl.c b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+index 659e1f6..c550267 100644
+--- a/drivers/gpu/drm/msm/dp/dp_ctrl.c
++++ b/drivers/gpu/drm/msm/dp/dp_ctrl.c
+@@ -11,6 +11,7 @@
+ #include <linux/completion.h>
+ #include <linux/delay.h>
+ #include <linux/iopoll.h>
++#include <linux/moduleparam.h>
+ #include <linux/phy/phy.h>
+ #include <linux/phy/phy-dp.h>
+ #include <linux/pm_opp.h>
+@@ -26,6 +27,10 @@
+ #include "dp_ctrl.h"
+ #include "dp_link.h"
+ 
++static bool bookedge_hbr2_tps3;
++module_param_named(bookedge_hbr2_tps3, bookedge_hbr2_tps3, bool, 0444);
++MODULE_PARM_DESC(bookedge_hbr2_tps3, "Test TPS3 for HBR2 DisplayPort repeaters");
++
+ #define POLLING_SLEEP_US			1000
+ #define POLLING_TIMEOUT_US			10000
+ 
+@@ -1559,7 +1564,13 @@ static int msm_dp_ctrl_link_train_2(struct msm_dp_ctrl_private *ctrl,
+ 
+ 	*training_step = DP_TRAINING_2;
+ 
+-	if (drm_dp_tps4_supported(ctrl->panel->dpcd)) {
++	if (bookedge_hbr2_tps3 && dp_phy != DP_PHY_DPRX &&
++	    ctrl->link->link_params.rate == 540000 &&
++	    drm_dp_tps3_supported(ctrl->panel->dpcd)) {
++		drm_dbg_dp(ctrl->drm_dev, "testing TPS3 at HBR2 on repeater %d\n", dp_phy);
++		pattern = DP_TRAINING_PATTERN_3 | DP_LINK_SCRAMBLING_DISABLE;
++		state_ctrl_bit = 3;
++	} else if (drm_dp_tps4_supported(ctrl->panel->dpcd)) {
+ 		pattern = DP_TRAINING_PATTERN_4;
+ 		state_ctrl_bit = 4;
+ 	} else if (drm_dp_tps3_supported(ctrl->panel->dpcd)) {
+-- 
+2.56.1
+

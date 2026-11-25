@@ -9,6 +9,11 @@ Base kernel: `zensanp/linux-book4-edge` at commit `2685c75587ff`
 top and build with `config/book4-edge.config`. `dts/` holds the same board file
 as patch 0003, for reading.
 
+The [NP750XQA hardware patches](docs/hardware-patches.md) add microSD, USB-C
+hotplug and native HDMI, with separate experiments for USB-C video.
+The [desktop setup notes](docs/plasma.md) cover power profiles, Fn+F11,
+display recovery, brightness and Oryon Monitor.
+
 ## What works
 
 | Function | State |

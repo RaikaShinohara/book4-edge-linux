@@ -1,0 +1,55 @@
+From db236f6039c3cd3db06df968927f9b0de3d1b7dd Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 16:59:24 +0000
+Subject: [PATCH] drm/msm/dpu: add opt-in single-mixer allocation for Book4
+ Edge
+
+Allow modes within the width and core clock limits to use one
+layer mixer with msm.bookedge_multidisplay=1. This tests whether
+more external outputs can be active at the same time.
+
+Link: https://discourse.ubuntu.com/t/four-independent-displays-on-ubuntu-arm64-galaxy-book4-edge-np750xqa-kb2br/91197
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index 005c128d1..382da94b7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -1376,6 +1376,11 @@ static int dpu_crtc_reassign_planes(struct drm_crtc *crtc, struct drm_crtc_state
+ #define MAX_CHANNELS_PER_CRTC PIPES_PER_PLANE
+ #define MAX_HDISPLAY_SPLIT 1080
+ 
++static bool bookedge_multidisplay;
++module_param(bookedge_multidisplay, bool, 0444);
++MODULE_PARM_DESC(bookedge_multidisplay,
++		 "Use one layer mixer when width and core clock permit");
++
+ static struct msm_display_topology dpu_crtc_get_topology(
+ 		struct drm_crtc *crtc,
+ 		struct dpu_kms *dpu_kms,
+@@ -1418,10 +1423,20 @@ static struct msm_display_topology dpu_crtc_get_topology(
+ 	else if (topology.num_dsc == 2)
+ 		topology.num_lm = 2;
+ 	else if (dpu_kms->catalog->caps->has_3d_merge &&
+-		 topology.num_dsc == 0)
+-		topology.num_lm = (mode->hdisplay > MAX_HDISPLAY_SPLIT) ? 2 : 1;
+-	else
++		 topology.num_dsc == 0) {
++		u64 mode_clock = dpu_core_perf_adjusted_mode_clk(mode->clock,
++							 dpu_kms->perf.perf_cfg);
++		bool fits_single_mixer =
++			mode->hdisplay <= dpu_kms->catalog->caps->max_mixer_width &&
++			mode_clock * 1000 <= dpu_kms->perf.max_core_clk_rate;
++
++		if (bookedge_multidisplay && fits_single_mixer)
++			topology.num_lm = 1;
++		else
++			topology.num_lm = mode->hdisplay > MAX_HDISPLAY_SPLIT ? 2 : 1;
++	} else {
+ 		topology.num_lm = 1;
++	}
+ 
+ 	if (crtc_state->ctm || crtc_state->gamma_lut)
+ 		topology.num_dspp = topology.num_lm;

@@ -1,0 +1,119 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: RaikaShinohara <321751277+RaikaShinohara@users.noreply.github.com>
+Date: Sun, 22 Nov 2026 21:07:40 +0000
+Subject: [PATCH] usb: typec: samsung-emuec: read the active CC pin for
+ orientation
+
+The S2MM006 attach state cannot distinguish the two plug orientations. Read the pin register when a connection has a valid source path or VBUS, and wait for the BC and PD role bits to agree before programming the mux.
+
+Based on the CC-pin fix published by the Book4 Edge community (n1c0la84/book4-edge-linux). This version matches the module tested on NP750XQA.
+---
+ drivers/usb/typec/samsung-emuec.c | 46 +++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/usb/typec/samsung-emuec.c b/drivers/usb/typec/samsung-emuec.c
+index caf94d6..17fd397 100644
+--- a/drivers/usb/typec/samsung-emuec.c
++++ b/drivers/usb/typec/samsung-emuec.c
+@@ -35,6 +35,7 @@
+ #define S2MM006_IRQ_LAST		0x07
+ #define S2MM006_REG_BC_STATUS		0x0e
+ #define S2MM006_REG_CC_STATUS		0x11
++#define S2MM006_REG_CC_PIN		0x12
+ #define S2MM006_REG_PD_STATUS2		0x14
+ #define S2MM006_REG_PD_STATUS3		0x1a
+ #define S2MM006_REG_SWITCH_STATUS	0x1c
+@@ -740,7 +741,7 @@ static void samsung_emuec_sync(struct work_struct *work)
+ 	struct samsung_emuec *pdic = container_of(to_delayed_work(work),
+ 						    struct samsung_emuec, work);
+ 	struct typec_mux_state mux_state = { .mode = TYPEC_STATE_USB };
+-	u8 command, status_bit, bc, cc, pd, sw, enter_usb;
++	u8 command, status_bit, bc, cc, cc_pin, pd, sw, enter_usb;
+ 	struct typec_partner_desc partner_desc = {
+ 		.accessory = TYPEC_ACCESSORY_NONE,
+ 		.usb_capability = 0,
+@@ -750,7 +751,7 @@ static void samsung_emuec_sync(struct work_struct *work)
+ 	enum typec_role power_role;
+ 	enum typec_data_role data_role;
+ 	enum usb_role usb_role;
+-	bool vbus_present, source_path_attached, consumer_path_active;
++	bool vbus_present, source_path_attached, consumer_path_active, attached;
+ 	int ret;
+ 
+ 	guard(mutex)(&pdic->lock);
+@@ -772,27 +773,39 @@ static void samsung_emuec_sync(struct work_struct *work)
+ 	if (ret)
+ 		return;
+ 
+-	orientation = (cc >> 4) == 1 ? TYPEC_ORIENTATION_NORMAL :
+-		      (cc >> 4) == 2 ? TYPEC_ORIENTATION_REVERSE :
+-					  TYPEC_ORIENTATION_NONE;
++	/* CC_STATUS reports the attach type, not the active CC pin. */
++	attached = (cc >> 4) == 1 || (cc >> 4) == 2;
+ 	power_role = pd & BIT(3) ? TYPEC_SOURCE : TYPEC_SINK;
+ 	data_role = pd & BIT(2) ? TYPEC_HOST : TYPEC_DEVICE;
+ 	vbus_present = bc & BIT(0);
+ 	source_path_attached = bc & BIT(4);
+ 	consumer_path_active = sw & BIT(1);
+ 
+-	if (orientation == TYPEC_ORIENTATION_NONE) {
++	if (!attached || (!vbus_present && !source_path_attached)) {
+ 		samsung_emuec_detach(pdic);
+ 		return;
+ 	}
+ 
+-	/* A sink needs external VBUS; a source may need its path enabled first. */
+-	if (power_role == TYPEC_SINK && !vbus_present) {
+-		mod_delayed_work(system_dfl_wq, &pdic->work,
+-				 msecs_to_jiffies(150));
++	ret = samsung_emuec_read(pdic, S2MM006_REG_CC_PIN, &cc_pin, sizeof(cc_pin));
++	if (ret)
++		return;
++
++	switch (cc_pin & GENMASK(1, 0)) {
++	case 1:
++		orientation = TYPEC_ORIENTATION_NORMAL;
++		break;
++	case 2:
++		orientation = TYPEC_ORIENTATION_REVERSE;
++		break;
++	default:
+ 		return;
+ 	}
+ 
++	/* The BC and PD role bits can settle at different times. */
++	if ((power_role == TYPEC_SOURCE && !source_path_attached) ||
++	    (power_role == TYPEC_SINK && !vbus_present))
++		return;
++
+ 	mode = power_role == TYPEC_SOURCE ? SAMSUNG_EMUEC_MODE_PROVIDER :
+ 					    SAMSUNG_EMUEC_MODE_CONSUMER;
+ 	command = mode == SAMSUNG_EMUEC_MODE_PROVIDER ?
+@@ -810,19 +823,16 @@ static void samsung_emuec_sync(struct work_struct *work)
+ 				 "failed to enable %s path: %d\n",
+ 				 mode == SAMSUNG_EMUEC_MODE_PROVIDER ?
+ 				 "provider" : "consumer", ret);
+-		else
++		else {
+ 			pdic->attempted_mode = mode;
+-	}
+-
+-	if (!(sw & status_bit) ||
+-	    (power_role == TYPEC_SOURCE && !source_path_attached)) {
+-		/* Keep checking until the requested power path becomes active. */
+-		if (pdic->attempted_mode == mode)
+ 			mod_delayed_work(system_dfl_wq, &pdic->work,
+ 					 msecs_to_jiffies(150));
+-		return;
++		}
+ 	}
+ 
++	if (!(sw & status_bit))
++		return;
++
+ 	if (pdic->attached && (pdic->power_role != power_role ||
+ 			       pdic->data_role != data_role))
+ 		samsung_emuec_detach(pdic);
+-- 
+2.56.1
+
