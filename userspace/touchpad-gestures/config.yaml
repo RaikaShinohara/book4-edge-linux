@@ -1,0 +1,53 @@
+device_rules:
+  - conditions: '$name != hid-over-i2c 14E5:650E Touchpad'
+    handle_evdev_events: false
+
+touchpad:
+  gestures:
+    - type: swipe
+      fingers: 3
+      direction: left_right
+      actions:
+        - on: begin
+          input:
+            - keyboard: [ +leftalt, tab ]
+        - on: update
+          interval: -75
+          input:
+            - keyboard: [ leftshift+tab ]
+        - on: update
+          interval: 75
+          input:
+            - keyboard: [ tab ]
+        - on: end_cancel
+          input:
+            - keyboard: [ -leftalt ]
+
+    - type: swipe
+      fingers: 3-4
+      direction: up
+      actions:
+        - on: end
+          command: /usr/local/bin/bookedge-touchpad-overview
+
+    - type: swipe
+      fingers: 3-4
+      direction: down
+      actions:
+        - on: end
+          command: qdbus6 org.kde.KWin /KWin org.kde.KWin.showDesktop true
+
+    - type: tap
+      fingers: 3
+      actions:
+        - on: end
+          command: qdbus6 org.kde.krunner /App org.kde.krunner.App.display
+
+    - type: tap
+      fingers: 4
+      actions:
+        - on: end
+          input:
+            - keyboard: [ leftmeta+n ]
+
+    # Let KWin handle four-finger horizontal swipes to keep its desktop animation.

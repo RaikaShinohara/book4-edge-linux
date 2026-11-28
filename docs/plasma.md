@@ -6,6 +6,9 @@
   across a full three-profile cycle.
 - [Oryon Monitor](../userspace/oryon-monitor/) provides a live hardware and
   process panel on Meta+Esc.
+- The optional [touchpad gesture profile](../userspace/touchpad-gestures/)
+  maps three- and four-finger gestures to the Windows 11 actions on Plasma
+  Wayland. It was tested with the Zinitix touchpad on the NP750XQA.
 - The optional [DP-1 recovery service](../userspace/display-recovery/)
   addresses a black external screen after some hub reconnections.
 - On the internal eDP panel, Plasma's **Prefer color accuracy** setting

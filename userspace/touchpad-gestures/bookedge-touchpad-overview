@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+
+if [ "$(qdbus6 org.kde.KWin /KWin org.kde.KWin.showingDesktop)" = true ]; then
+    exec qdbus6 org.kde.KWin /KWin org.kde.KWin.showDesktop false
+fi
+
+exec qdbus6 org.kde.kglobalaccel /component/kwin \
+    org.kde.kglobalaccel.Component.invokeShortcut Overview
