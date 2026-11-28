@@ -8,6 +8,10 @@ On Arch Linux ARM, install `tuned-ppd`, then run `sudo ./install.sh` from this d
 | Balanced | 2.976 GHz | 940 MHz |
 | Performance | 3.245 GHz (cores 0–3), 3.418 GHz (cores 4–7) | 1,107 MHz |
 
+On the tested NP750XQA, overriding the Adreno speed bin to request 1,250 or
+1,400 MHz increased the time for the same GPU compute dispatch from 0.84 ms to
+48.46 ms. Returning to 1,107 MHz restored performance after each test.
+
 The CPU uses `schedutil` with boost enabled and Adreno uses `simple_ondemand`. All three modes scale to their idle frequencies. The EC controls the fan automatically in every mode; none of these profiles programs a fan curve.
 
 Plasma offers these profiles in the battery applet. If PowerDevil was already running before TuneD was installed, run:
