@@ -11,6 +11,8 @@ as patch 0003, for reading.
 
 The [NP750XQA hardware patches](docs/hardware-patches.md) add microSD, USB-C
 hotplug and native HDMI, with separate experiments for USB-C video.
+The [combined EL2 kernel](docs/mst.md) runs KVM with two independent
+monitors on one USB-C hub and a third monitor on native HDMI.
 The [desktop setup notes](docs/plasma.md) cover power profiles, Fn+F11,
 display recovery, brightness and Oryon Monitor.
 
@@ -31,7 +33,8 @@ display recovery, brightness and Oryon Monitor.
 | Battery, AC, EC temperatures, fan level | `driver/samsung-galaxybook-ec` |
 | Memory under load | freeze fixes: `patches/0004`, MGLRU and zram (`docs/memory.md`); tested for hours, not yet days |
 | Suspend | not verified |
-| HDMI out, SD card, second USB2 port | not wired / not tested |
+| Native HDMI, USB-C video | tested together with KVM on the [combined kernel](docs/mst.md) |
+| SD card, second USB2 port | see [hardware patches](docs/hardware-patches.md) for microSD support |
 | Video decode (iris) | driver built, DT node left disabled |
 | RTC | never probes; time is stale until NTP |
 

@@ -35,4 +35,5 @@ the dedicated UEFI Shell entry, so the usual loader does not load it.
 Keep the existing boot entry available while testing.
 
 Check for EL2 with journalctl -k -b and run boot/kvm/check-kvm.py as your
-normal user. USB-C MST still uses a separate experimental kernel build.
+normal user. The [combined kernel](mst.md) also boots at EL2 and supports
+two independent displays on one USB-C hub alongside native HDMI.
